@@ -1,4 +1,12 @@
 package Adimin_Cond.dto.veiculo;
 
-public record VincularVeiculoRequestDTO() {
+import jakarta.validation.constraints.NotNull;
+
+public record VincularVeiculoRequestDTO(
+
+        @NotNull(message = "ID do morador obrigatório")
+        Long IdMorador,
+        @NotNull(message = "ID de veículo obrigatório")
+        Long IdVeiculo
+) {
 }

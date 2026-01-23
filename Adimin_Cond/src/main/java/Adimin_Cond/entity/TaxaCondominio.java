@@ -24,7 +24,7 @@ public class TaxaCondominio {
     private Long id;
 
     @Column(nullable = false)
-    private String referencia; // Ex: 01/2026
+    private String referencia;
 
     @Column(nullable = false)
     private BigDecimal valor;
