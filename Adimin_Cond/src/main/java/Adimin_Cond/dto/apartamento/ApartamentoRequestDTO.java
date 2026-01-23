@@ -1,4 +1,4 @@
-package Adimin_Cond.dto;
+package Adimin_Cond.dto.apartamento;
 
 public record ApartamentoRequestDTO() {
 }
