@@ -1,11 +1,8 @@
 package Adimin_Cond.dto.apartamento;
 
-import Adimin_Cond.entity.Apartamento;
-import Adimin_Cond.entity.Morador;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record VincularAprtRequestDTO(
+public record VincularAptoRequestDTO(
 
         @NotNull(message = "ID de apartamento obrigatorio")
         Long IdApartamento,

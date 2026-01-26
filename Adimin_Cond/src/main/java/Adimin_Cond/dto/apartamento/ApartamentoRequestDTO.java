@@ -12,14 +12,11 @@ public record ApartamentoRequestDTO(
         @NotNull(message = "Número obrigatório") @Positive(message = "Número inválido")
         Integer numero,
 
-        @NotBlank(message = "Bloco obrigatório")
+        @NotBlank(message = "Bloco de apartamento obrigatório")
         String bloco,
 
         @NotNull(message = "Andar obrigatório") @Positive(message = "Andar inválido")
-        Integer andar,
-
-        @NotNull(message = "Status obrigatório") @Enumerated(EnumType.STRING)
-        StatusApartamento status
+        Integer andar
 ) {
     public Apartamento toApartamento()
     {
@@ -28,7 +25,6 @@ public record ApartamentoRequestDTO(
         apartamento.setNumero(this.numero);
         apartamento.setBloco(this.bloco);
         apartamento.setAndar(this.andar);
-        apartamento.setStatus(this.status);
 
         return apartamento;
     }

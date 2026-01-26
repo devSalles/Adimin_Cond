@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "taxas_condominio",
+@Table(name = "taxasCondominio",
         uniqueConstraints = @UniqueConstraint(columnNames = {"morador_id", "referencia"}))
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class TaxaCondominio {
     @Column(nullable = false)
     private String referencia;
 
-    @Column(nullable = false)
+    @Column(nullable = false,precision = 10,scale = 2)
     private BigDecimal valor;
 
     @Column(nullable = false)
@@ -37,6 +37,6 @@ public class TaxaCondominio {
     private StatusTaxa status;
 
     @ManyToOne
-    @JoinColumn(name = "morador_id")
+    @JoinColumn(name = "morador_id",nullable = false)
     private Morador morador;
 }

@@ -20,10 +20,8 @@ public class Veiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false, unique = true)
     private String placa;
-
 
     @Column(nullable = false)
     private String modelo;

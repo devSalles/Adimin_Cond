@@ -1,7 +1,9 @@
 package Adimin_Cond.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 @Table(name = "visitantes")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Visitante {
 
     @Id

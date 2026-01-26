@@ -28,10 +28,9 @@ public class Apartamento {
     @Column(nullable = false)
     private Integer andar;
 
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusApartamento status;
+    private StatusApartamento statusApartamento;
 
     @OneToOne
     @JoinColumn(name = "morador_id")
