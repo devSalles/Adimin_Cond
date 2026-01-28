@@ -13,7 +13,6 @@ import Adimin_Cond.repository.MoradorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
@@ -31,6 +30,17 @@ public class ApartamentoService {
 
         this.apartamentoRepository.save(apartamento);
         return ApartamentoResponseDTO.fromApartamento(apartamento);
+    }
+
+    @Transactional
+    public ApartamentoResponseDTO atualizarApartamento(Long id, ApartamentoRequestDTO dto)
+    {
+        Apartamento apto = buscarID(id);
+
+        Apartamento aptoAtualizado = dto.updateApartamento(apto);
+        this.apartamentoRepository.save(aptoAtualizado);
+
+        return ApartamentoResponseDTO.fromApartamento(aptoAtualizado);
     }
 
     @Transactional
@@ -122,6 +132,20 @@ public class ApartamentoService {
         }
 
         return apartamentos.stream().map(ApartamentoResponseDTO::fromApartamento).toList();
+    }
+
+    public ApartamentoResponseDTO desativarApto(Long id)
+    {
+        Apartamento apto = buscarID(id);
+
+        if(apto.getStatusApartamento() == StatusApartamento.INATIVO)
+        {
+            throw new AptoIndisponivelException("Apartamento já esta inativo");
+        }
+        apto.setStatusApartamento(StatusApartamento.INATIVO);
+        this.apartamentoRepository.save(apto);
+
+        return ApartamentoResponseDTO.fromApartamento(apto);
     }
 
     //--------------------- METODOS AUXILIARES ---------------------

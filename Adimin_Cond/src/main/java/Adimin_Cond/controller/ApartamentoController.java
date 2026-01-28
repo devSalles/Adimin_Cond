@@ -30,6 +30,12 @@ public class ApartamentoController {
         return ResponseEntity.ok(this.apartamentoService.vincularApartamento(dto));
     }
 
+    @PutMapping("/atualizarApto-id/{id}")
+    public ResponseEntity<?> atualizarApto(@PathVariable Long id, @Valid @RequestBody ApartamentoRequestDTO dto)
+    {
+        return ResponseEntity.ok(this.apartamentoService.atualizarApartamento(id,dto));
+    }
+
     @PutMapping("/colocar-manutencao/{id}")
     public ResponseEntity<?> colocarManutencao(@PathVariable Long id)
     {
@@ -64,5 +70,11 @@ public class ApartamentoController {
     public ResponseEntity<?> buscarBloco(@PathVariable String blocoApt)
     {
         return ResponseEntity.ok(this.apartamentoService.buscarPorBloco(blocoApt));
+    }
+
+    @DeleteMapping("/desativar-apartamento/{id}")
+    public ResponseEntity<?> desativar(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(this.apartamentoService.desativarApto(id));
     }
 }
