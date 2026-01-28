@@ -10,11 +10,12 @@ public record VincularAptoResponseDTO(
         Integer numero,
         Integer andar,
         StatusApartamento status,
+        String observacoes,
         MoradorResponseDTO moradorResponseDTO
 ) {
-    public static VincularAptoResponseDTO fromApartamento(Apartamento apartamento)
+    public static VincularAptoResponseDTO fromApartamento(Apartamento apto)
     {
-        return new VincularAptoResponseDTO(apartamento.getId(),apartamento.getBloco(),apartamento.getNumero(),apartamento.getAndar(),apartamento.getStatusApartamento(),
-                apartamento.getMorador() != null ? MoradorResponseDTO.fromMorador(apartamento.getMorador()) : null);
+        return new VincularAptoResponseDTO(apto.getId(),apto.getBloco(),apto.getNumero(),apto.getAndar(),apto.getStatusApartamento(),
+                apto.getObservacoes(), apto.getMorador() != null ? MoradorResponseDTO.fromMorador(apto.getMorador()) : null);
     }
 }

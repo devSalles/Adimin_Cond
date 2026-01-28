@@ -32,6 +32,9 @@ public class Apartamento {
     @Column(nullable = false)
     private StatusApartamento statusApartamento;
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String observacoes;
+
     @OneToOne
     @JoinColumn(name = "morador_id")
     private Morador morador;

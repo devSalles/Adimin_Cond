@@ -1,9 +1,6 @@
 package Adimin_Cond.dto.apartamento;
 
-import Adimin_Cond.Enum.StatusApartamento;
 import Adimin_Cond.entity.Apartamento;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -16,7 +13,9 @@ public record ApartamentoRequestDTO(
         String bloco,
 
         @NotNull(message = "Andar obrigatório") @Positive(message = "Andar inválido")
-        Integer andar
+        Integer andar,
+
+        String observacoes
 ) {
     public Apartamento toApartamento()
     {
@@ -25,6 +24,17 @@ public record ApartamentoRequestDTO(
         apartamento.setNumero(this.numero);
         apartamento.setBloco(this.bloco);
         apartamento.setAndar(this.andar);
+        apartamento.setObservacoes(this.observacoes);
+
+        return apartamento;
+    }
+
+    public Apartamento updateApartamento(Apartamento apartamento)
+    {
+        apartamento.setNumero(this.numero);
+        apartamento.setBloco(this.bloco);
+        apartamento.setAndar(this.andar);
+        apartamento.setObservacoes(this.observacoes);
 
         return apartamento;
     }

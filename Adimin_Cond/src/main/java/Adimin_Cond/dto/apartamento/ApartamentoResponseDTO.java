@@ -8,12 +8,13 @@ public record ApartamentoResponseDTO(
         String bloco,
         Integer numero,
         Integer andar,
+        String observacoes,
         StatusApartamento status
 
 ) {
 
-    public static ApartamentoResponseDTO fromApartamento(Apartamento apartamento)
+    public static ApartamentoResponseDTO fromApartamento(Apartamento apto)
     {
-        return new ApartamentoResponseDTO(apartamento.getId(),apartamento.getBloco(),apartamento.getNumero(),apartamento.getAndar(),apartamento.getStatusApartamento());
+        return new ApartamentoResponseDTO(apto.getId(),apto.getBloco(),apto.getNumero(),apto.getAndar(), apto.getObservacoes(),apto.getStatusApartamento());
     }
 }
