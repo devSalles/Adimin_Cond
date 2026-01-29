@@ -57,4 +57,32 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
+
+    @ExceptionHandler(CpfRepetidoException.class)
+    public ResponseEntity<MessageRestError> CpfRepetidoException(CpfRepetidoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+    @ExceptionHandler(EmailRepetidoException.class)
+    public ResponseEntity<MessageRestError> EmailRepetidoException(EmailRepetidoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+    @ExceptionHandler(MoradorInativoException.class)
+    public ResponseEntity<MessageRestError> MoradorInativoException(MoradorInativoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+    @ExceptionHandler(TelefoneRepetidoException.class)
+    public ResponseEntity<MessageRestError> TelefoneRepetidoException(TelefoneRepetidoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
 }
