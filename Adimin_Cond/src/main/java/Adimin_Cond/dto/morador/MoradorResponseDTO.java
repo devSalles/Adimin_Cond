@@ -17,10 +17,10 @@ public record MoradorResponseDTO(
         String telefone,
         StatusMorador status,
 
-        List<VeiculoResponseDTO> veiculoResponseDTO,
-        List<VisitanteResponseDTO> visitanteResponseDTO,
-        List<TaxaCondResponseDTO> taxaCondResponseDTO,
-        ApartamentoResponseDTO apartamentoResponseDTO
+        List<VeiculoResponseDTO> veiculo,
+        List<VisitanteResponseDTO> visitante,
+        List<TaxaCondResponseDTO> taxaCondominio,
+        ApartamentoResponseDTO apartamento
 ) {
     public static MoradorResponseDTO fromMorador(Morador morador)
     {

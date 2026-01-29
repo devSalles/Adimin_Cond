@@ -1,11 +1,14 @@
 package Adimin_Cond.dto.veiculo;
 
 import Adimin_Cond.Enum.StatusVeiculo;
+import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.Veiculo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+
+import java.util.ArrayList;
 
 public record VeiculoRequestDTO(
 
@@ -22,9 +25,11 @@ public record VeiculoRequestDTO(
 
         @NotNull(message = "Status obrigatório")
         @Enumerated(EnumType.STRING)
-        StatusVeiculo status
+        StatusVeiculo status,
+
+        Long IdMorador
 ) {
-    public Veiculo toVeiculo()
+    public Veiculo toVeiculo(Morador morador)
     {
         Veiculo veiculo = new Veiculo();
 
@@ -32,6 +37,16 @@ public record VeiculoRequestDTO(
         veiculo.setModelo(this.modelo);
         veiculo.setCor(this.cor);
         veiculo.setStatus(this.status);
+
+        if(morador != null)
+        {
+            if(morador.getVeiculos() == null)
+            {
+                morador.setVeiculos(new ArrayList<>());
+            }
+
+            veiculo.setMorador(morador);
+        }
 
         return veiculo;
     }

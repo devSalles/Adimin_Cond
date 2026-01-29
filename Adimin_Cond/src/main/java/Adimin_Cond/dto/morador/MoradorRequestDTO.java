@@ -20,20 +20,15 @@ public record MoradorRequestDTO(
         String email,
 
         @NotBlank(message = "Telefone obrigatório")
-        String telefone,
-
-        @NotNull(message = "Status obrigatório")
-        @Enumerated(EnumType.STRING)
-        StatusMorador status
+        String telefone
 ) {
-    public Morador toMorador(Apartamento apartamento)
+    public Morador toMorador()
     {
         Morador morador = new Morador();
         morador.setNome(this.nome);
         morador.setCpf(this.cpf);
         morador.setEmail(this.email);
         morador.setTelefone(this.telefone);
-        morador.setStatus(this.status);
 
         return morador;
     }
