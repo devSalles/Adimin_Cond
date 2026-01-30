@@ -1,8 +1,11 @@
 package Adimin_Cond.repository;
 
+import Adimin_Cond.Enum.StatusVisitante;
 import Adimin_Cond.entity.Morador;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface MoradorRepository extends JpaRepository<Morador,Long> {
@@ -13,7 +16,11 @@ public interface MoradorRepository extends JpaRepository<Morador,Long> {
 
     boolean existsByTelefone(String telefone);
 
+    Morador findByNome(String nome);
+
     Morador findByCpf(String cpf);
 
     Morador findByEmail(String cpf);
+
+    boolean existsByVisitantesAndStatusIn(Long id, List<StatusVisitante> statusVisitantes);
 }

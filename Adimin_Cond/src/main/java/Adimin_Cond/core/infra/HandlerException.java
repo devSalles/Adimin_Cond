@@ -85,4 +85,11 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
+
+    @ExceptionHandler(VisitaAtivaException.class)
+    public ResponseEntity<MessageRestError> VisitaAtivaException(VisitaAtivaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
 }
