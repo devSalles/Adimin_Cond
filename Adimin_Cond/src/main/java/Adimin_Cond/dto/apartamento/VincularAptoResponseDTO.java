@@ -11,7 +11,7 @@ public record VincularAptoResponseDTO(
         Integer andar,
         StatusApartamento status,
         String observacoes,
-        MoradorResponseDTO moradorResponseDTO
+        MoradorResponseDTO morador
 ) {
     public static VincularAptoResponseDTO fromApartamento(Apartamento apto)
     {

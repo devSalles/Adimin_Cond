@@ -1,10 +1,10 @@
 package Adimin_Cond.service;
 
 import Adimin_Cond.Enum.StatusApartamento;
+import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.core.exception.*;
 import Adimin_Cond.dto.apartamento.ApartamentoRequestDTO;
 import Adimin_Cond.dto.apartamento.ApartamentoResponseDTO;
-import Adimin_Cond.dto.apartamento.VincularAptoRequestDTO;
 import Adimin_Cond.dto.apartamento.VincularAptoResponseDTO;
 import Adimin_Cond.entity.Apartamento;
 import Adimin_Cond.entity.Morador;
@@ -44,33 +44,53 @@ public class ApartamentoService {
     }
 
     @Transactional
-    public VincularAptoResponseDTO vincularApartamento(VincularAptoRequestDTO dto)
+    public VincularAptoResponseDTO vincularApartamento(Long IdApartamento, Long IdMorador)
     {
-        Apartamento apto = buscarID(dto.IdApartamento());
-        Morador morador = this.moradorRepository.findById(dto.IdMorador()).orElseThrow(()->new IdNaoEncontradoException("ID de morador não encontrado"));
+        Apartamento apto = buscarID(IdApartamento);
+        Morador morador = this.moradorRepository.findById(IdMorador).orElseThrow(()->new IdNaoEncontradoException("ID de morador não encontrado"));
 
-        boolean apartamentoIndisponivel = this.apartamentoRepository.existsByIdAndStatusApartamentoIn(dto.IdApartamento(), List.of(
-                StatusApartamento.OCUPADO,StatusApartamento.MANUTENCAO));
-        if(apartamentoIndisponivel)
-        {
-            throw new AptoIndisponivelException("Apartamento indisponível para vínculo");
-        }
-
-        if(morador.getApartamento() != null)
-        {
-            throw new MoradorJaVinculadoException("Morador já está vinculado a um apartamento");
-        }
+        //Validações para vínculo
+        validarApartamento(apto);
+        validarMorador(morador);
 
         morador.setApartamento(apto);
+        apto.setMorador(morador);
+
+        apto.setStatusApartamento(StatusApartamento.OCUPADO);
+
         this.apartamentoRepository.save(apto);
 
         return VincularAptoResponseDTO.fromApartamento(apto);
     }
 
     @Transactional
+    public ApartamentoResponseDTO desvincularApartamento(Long idApartamento)
+    {
+        Apartamento apto = buscarID(idApartamento);
+
+        if(apto.getMorador() == null)
+        {
+            throw new MoradorDesvinculadoException("Morador já está desvinculado");
+        }
+
+        Morador morador = apto.getMorador();
+
+        apto.setMorador(null);
+        morador.setApartamento(null);
+
+        apto.setStatusApartamento(StatusApartamento.DESOCUPADO);
+
+        this.moradorRepository.save(morador);
+        this.apartamentoRepository.save(apto);
+
+        return ApartamentoResponseDTO.fromApartamento(apto);
+    }
+
+    @Transactional
     public ApartamentoResponseDTO colocarEmManutencao(Long id)
     {
         Apartamento apto = buscarID(id);
+
         if(apto.getStatusApartamento() == StatusApartamento.MANUTENCAO)
         {
             throw new ManutencaoException("O apartamento já está em manutenção");
@@ -142,6 +162,7 @@ public class ApartamentoService {
         {
             throw new AptoIndisponivelException("Apartamento já esta inativo");
         }
+
         apto.setStatusApartamento(StatusApartamento.INATIVO);
         this.apartamentoRepository.save(apto);
 
@@ -153,5 +174,35 @@ public class ApartamentoService {
     public Apartamento buscarID(Long id)
     {
         return this.apartamentoRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("ID de apartamento não encontrado"));
+    }
+
+    public void validarApartamento(Apartamento apartamento)
+    {
+        if(apartamento.getStatusApartamento() == StatusApartamento.INATIVO ||
+           apartamento.getStatusApartamento() == StatusApartamento.MANUTENCAO ||
+           apartamento.getStatusApartamento() == StatusApartamento.OCUPADO)
+        {
+            throw new AptoIndisponivelException("Apartamento indisponível para vínculo");
+        }
+
+        if(apartamento.getMorador()!= null)
+        {
+            throw new MoradorJaVinculadoException("Apartamento já possui morador");
+        }
+
+    }
+
+    public void validarMorador(Morador morador)
+    {
+        if(morador.getStatus() == StatusMorador.INATIVO)
+        {
+            throw new MoradorInativoException("Morador inativo não pode ser vinculado");
+        }
+
+        if(morador.getApartamento() != null)
+        {
+            throw new MoradorJaVinculadoException("Morador já está vinculado a um apartamento");
+        }
+
     }
 }
