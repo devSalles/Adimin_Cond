@@ -51,26 +51,9 @@ public class MoradorService {
     }
 
     @Transactional
-    public MoradorResponseDTO vincularApartamento(Long moradorId, Long apartamentoId) {
-
-        Morador morador = buscarMoradorAtivo(moradorId);
-        Apartamento apartamento = apartamentoRepository.findById(apartamentoId).orElseThrow(() -> new IdNaoEncontradoException("Apartamento não encontrado"));
-
-        if(morador.getStatus() == StatusMorador.INATIVO)
-        {
-            throw new MoradorInativoException();
-        }
-
-        morador.setApartamento(apartamento);
-        moradorRepository.save(morador);
-
-        return MoradorResponseDTO.fromMorador(morador);
-    }
-
-    @Transactional
     public MoradorResponseDTO adicionarVeiculo(Long moradorId, Long veiculoId) {
 
-        Morador morador = buscarMoradorAtivo(moradorId);
+        Morador morador = buscarMorador(moradorId);
         Veiculo veiculo = veiculoRepository.findById(veiculoId).orElseThrow(() -> new IdNaoEncontradoException("Veículo não encontrado"));
 
         if(morador.getStatus() == StatusMorador.INATIVO)
@@ -86,7 +69,7 @@ public class MoradorService {
 
     @Transactional
     public MoradorResponseDTO adicionarVisitante(Long moradorId, Long visitanteId) {
-        Morador morador = buscarMoradorAtivo(moradorId);
+        Morador morador = buscarMorador(moradorId);
         Visitante visitante = visitanteRepository.findById(visitanteId).orElseThrow(() -> new IdNaoEncontradoException("Visitante não encontrado"));
 
         if(morador.getStatus() == StatusMorador.INATIVO)
@@ -103,7 +86,7 @@ public class MoradorService {
     @Transactional
     public MoradorResponseDTO adicionarTaxaCondominio(Long moradorId, Long taxaId) {
 
-        Morador morador = buscarMoradorAtivo(moradorId);
+        Morador morador = buscarMorador(moradorId);
         TaxaCondominio taxa = taxaCondominioRepository.findById(taxaId).orElseThrow(() -> new IdNaoEncontradoException("Taxa não encontrada"));
 
         if(morador.getStatus() == StatusMorador.INATIVO)
@@ -163,7 +146,7 @@ public class MoradorService {
 
         if(morador == null)
         {
-            throw new NenhumCadastroException("Nome não encontrado");
+            throw new NenhumCadastroException("CPF não encontrado");
         }
 
         return MoradorResponseDTO.fromMorador(morador);
@@ -175,7 +158,7 @@ public class MoradorService {
 
         if(morador == null)
         {
-            throw new NenhumCadastroException("Nome não encontrado");
+            throw new NenhumCadastroException("Email não encontrado");
         }
 
         return MoradorResponseDTO.fromMorador(morador);
@@ -208,7 +191,9 @@ public class MoradorService {
         return MoradorResponseDTO.fromMorador(morador);
     }
 
-    private Morador buscarMoradorAtivo(Long id) {
+    //--------------------- METODOS AUXILIARES ---------------------
+
+    private Morador buscarMorador(Long id) {
         Morador morador = moradorRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Morador não encontrado"));
 
         if (morador.getStatus() == StatusMorador.INATIVO) {
