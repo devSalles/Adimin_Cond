@@ -44,6 +44,13 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 
+    @ExceptionHandler(MoradorDesvinculadoException.class)
+    public ResponseEntity<MessageRestError> MoradorDesvinculadoException(MoradorDesvinculadoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
     @ExceptionHandler(IdNaoEncontradoException.class)
     public ResponseEntity<MessageRestError> IdNaoEncontradoException(IdNaoEncontradoException ex)
     {
