@@ -1,6 +1,7 @@
 package Adimin_Cond.service;
 
 import Adimin_Cond.Enum.StatusMorador;
+import Adimin_Cond.Enum.StatusVeiculo;
 import Adimin_Cond.Enum.StatusVisitante;
 import Adimin_Cond.core.exception.*;
 import Adimin_Cond.dto.morador.MoradorRequestDTO;
@@ -19,7 +20,6 @@ import java.util.List;
 public class MoradorService {
 
     private final MoradorRepository moradorRepository;
-    private final ApartamentoRepository apartamentoRepository;
     private final VeiculoRepository veiculoRepository;
     private final TaxaCondominioRepository taxaCondominioRepository;
     private final VisitanteRepository visitanteRepository;
@@ -59,6 +59,11 @@ public class MoradorService {
         if(morador.getStatus() == StatusMorador.INATIVO)
         {
             throw new MoradorInativoException();
+        }
+
+        if(veiculo.getStatus() == StatusVeiculo.INATIVO)
+        {
+            throw new VeiculoInativoException("Veículo não pode ser vinculado pois está inativo");
         }
 
         morador.getVeiculos().add(veiculo);
@@ -170,6 +175,7 @@ public class MoradorService {
         return MoradorResponseDTO.fromMorador(morador);
     }
 
+    //Exclusão via Soft Delete
     public MoradorResponseDTO desativarMorador(Long id)
     {
         Morador morador = this.moradorRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Morador não encontrado"));

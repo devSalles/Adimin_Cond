@@ -1,5 +1,6 @@
 package Adimin_Cond.repository;
 
+import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.Enum.StatusVisitante;
 import Adimin_Cond.entity.Morador;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,8 @@ public interface MoradorRepository extends JpaRepository<Morador,Long> {
     Morador findByCpf(String cpf);
 
     Morador findByEmail(String cpf);
+
+    List<Morador>findByStatus(StatusMorador statusMorador);
 
     boolean existsByVisitantesAndStatusIn(Long id, List<StatusVisitante> statusVisitantes);
 }

@@ -154,6 +154,7 @@ public class ApartamentoService {
         return apartamentos.stream().map(ApartamentoResponseDTO::fromApartamento).toList();
     }
 
+    //Exclusão via Soft Delete
     public ApartamentoResponseDTO desativarApto(Long id)
     {
         Apartamento apto = buscarID(id);
