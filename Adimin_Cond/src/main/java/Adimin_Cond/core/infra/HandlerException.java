@@ -13,6 +13,14 @@ import java.util.Map;
 @ControllerAdvice
 public class HandlerException {
 
+    //Exceção global
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<MessageRestError> excecoesGlobais()
+//    {
+//        MessageRestError messageRestError = new MessageRestError(HttpStatus.INTERNAL_SERVER_ERROR,"Erro interno, tente novamente mais tarde");
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageRestError);
+//    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MessageRestError> MethodArgumentNotValidException(MethodArgumentNotValidException ex)
     {
@@ -29,6 +37,15 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.NOT_FOUND,ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageRestError);
     }
+
+    @ExceptionHandler(IdNaoEncontradoException.class)
+    public ResponseEntity<MessageRestError> IdNaoEncontradoException(IdNaoEncontradoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.NOT_FOUND,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageRestError);
+    }
+
+    // ------------ EXCEÇÕES DE APARTAMENTO ------------
 
     @ExceptionHandler(AptoIndisponivelException.class)
     public ResponseEntity<MessageRestError> ApartamentoIndisponivelException(AptoIndisponivelException ex)
@@ -51,19 +68,14 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
-    @ExceptionHandler(IdNaoEncontradoException.class)
-    public ResponseEntity<MessageRestError> IdNaoEncontradoException(IdNaoEncontradoException ex)
-    {
-        MessageRestError messageRestError = new MessageRestError(HttpStatus.NOT_FOUND,ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageRestError);
-    }
-
     @ExceptionHandler(MoradorJaVinculadoException.class)
     public ResponseEntity<MessageRestError> MoradorJaVinculadoException(MoradorJaVinculadoException ex)
     {
         MessageRestError messageRestError = new MessageRestError();
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
+
+    //------------ EXCEÇÕES DE MORADOR ------------
 
     @ExceptionHandler(CpfRepetidoException.class)
     public ResponseEntity<MessageRestError> CpfRepetidoException(CpfRepetidoException ex)
@@ -95,6 +107,29 @@ public class HandlerException {
 
     @ExceptionHandler(VisitaAtivaException.class)
     public ResponseEntity<MessageRestError> VisitaAtivaException(VisitaAtivaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    //------------ EXCEÇÕES DE VEÍCULO ------------
+
+    @ExceptionHandler(PlacaNaoEncontradaException.class)
+    public ResponseEntity<MessageRestError> PlacaNaoEncontradaException(PlacaNaoEncontradaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(PlacaRepetidaException.class)
+    public ResponseEntity<MessageRestError> PlacaRepetidaException(PlacaRepetidaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(VeiculoInativoException.class)
+    public ResponseEntity<MessageRestError> VeiculoInativoException(VeiculoInativoException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
