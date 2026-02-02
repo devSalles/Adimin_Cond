@@ -2,11 +2,10 @@ package Adimin_Cond.dto.acesso;
 
 import Adimin_Cond.entity.Acesso;
 import Adimin_Cond.entity.Veiculo;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record AcessoRequestDTO(
+public record AcessoEntradaRequestDTO(
 
         @NotBlank(message = "Porteiro obrigatório")
         String porteiro,

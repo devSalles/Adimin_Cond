@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "veiculos")
 @Getter
@@ -14,7 +17,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Veiculo {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,5 +38,8 @@ public class Veiculo {
     @ManyToOne
     @JoinColumn(name = "morador_id")
     private Morador morador;
+
+    @OneToMany(mappedBy = "veiculo",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Acesso> acessos = new ArrayList<>();
 
 }

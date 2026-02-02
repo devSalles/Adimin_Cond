@@ -1,4 +1,13 @@
 package Adimin_Cond.dto.acesso;
 
-public record AcessoSaidaRequestDTO() {
+
+import jakarta.validation.constraints.NotNull;
+
+public record AcessoSaidaRequestDTO(
+
+        @NotNull(message = "ID de veículo obrigatório")
+        Long veiculoId,
+
+        String porteiro
+) {
 }

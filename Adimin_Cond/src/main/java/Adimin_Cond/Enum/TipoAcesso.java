@@ -1,4 +1,6 @@
 package Adimin_Cond.Enum;
 
-public class TipoAcesso {
+public enum TipoAcesso {
+    ENTRADA,
+    SAIDA
 }
