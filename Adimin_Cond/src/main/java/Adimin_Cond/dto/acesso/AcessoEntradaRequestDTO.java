@@ -1,0 +1,31 @@
+package Adimin_Cond.dto.acesso;
+
+import Adimin_Cond.entity.Acesso;
+import Adimin_Cond.entity.Veiculo;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record AcessoRequestDTO(
+
+        @NotBlank(message = "Porteiro obrigatório")
+        String porteiro,
+
+        @NotNull(message = "ID de veículo obrigatório")
+        Long veiculo
+) {
+
+    public Acesso toAcesso(Veiculo veiculo)
+    {
+        Acesso acesso = new Acesso();
+
+        acesso.setPorteiro(this.porteiro);
+
+        if(acesso.getVeiculo()==null)
+        {
+            acesso.setVeiculo(veiculo);
+        }
+
+        return acesso;
+    }
+}
