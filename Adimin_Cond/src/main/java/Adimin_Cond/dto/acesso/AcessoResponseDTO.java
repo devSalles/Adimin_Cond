@@ -1,8 +1,8 @@
 package Adimin_Cond.dto.acesso;
 
 import Adimin_Cond.Enum.TipoAcesso;
+import Adimin_Cond.dto.veiculo.VeiculoResponseDTO;
 import Adimin_Cond.entity.Acesso;
-import Adimin_Cond.entity.Veiculo;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +13,11 @@ public record AcessoResponseDTO(
         LocalDateTime dataHoraSaida,
         String porteiro,
         TipoAcesso tipo,
-        Veiculo veiculo
+        VeiculoResponseDTO veiculo
 ) {
 
     public static AcessoResponseDTO fromAcesso(Acesso acesso) {
-        return new AcessoResponseDTO(acesso.getId(), acesso.getDataHoraEntrada(),acesso.getDataHoraSaida(), acesso.getPorteiro(), acesso.getTipo(),acesso.getVeiculo());
+        return new AcessoResponseDTO(acesso.getId(), acesso.getDataHoraEntrada(),acesso.getDataHoraSaida(), acesso.getPorteiro(), acesso.getTipoAcesso(),
+                acesso.getVeiculo() != null ? VeiculoResponseDTO.fromVeiculo(acesso.getVeiculo()) : null);
     }
 }

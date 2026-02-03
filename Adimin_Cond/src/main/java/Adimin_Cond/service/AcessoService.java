@@ -3,10 +3,7 @@ package Adimin_Cond.service;
 import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.Enum.StatusVeiculo;
 import Adimin_Cond.Enum.TipoAcesso;
-import Adimin_Cond.core.exception.AcessoRestritoException;
-import Adimin_Cond.core.exception.IdNaoEncontradoException;
-import Adimin_Cond.core.exception.MoradorInativoException;
-import Adimin_Cond.core.exception.VeiculoInativoException;
+import Adimin_Cond.core.exception.*;
 import Adimin_Cond.dto.acesso.AcessoEntradaRequestDTO;
 import Adimin_Cond.dto.acesso.AcessoResponseDTO;
 import Adimin_Cond.dto.acesso.AcessoSaidaRequestDTO;
@@ -18,7 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class AcessoService {
 
         Acesso acesso = acessoDTO.toAcesso(veiculo);
         acesso.setDataHoraEntrada(LocalDateTime.now());
-        acesso.setTipo(TipoAcesso.ENTRADA);
+        acesso.setTipoAcesso(TipoAcesso.ENTRADA);
 
         this.acessoRepository.save(acesso);
 
@@ -69,7 +69,7 @@ public class AcessoService {
             throw new AcessoRestritoException("Não há registro de entrada para esse veículo");
         }
 
-        acessoAberto.setTipo(TipoAcesso.SAIDA);
+        acessoAberto.setTipoAcesso(TipoAcesso.SAIDA);
         acessoAberto.setDataHoraSaida(LocalDateTime.now());
 
         if(acessoDTO.porteiro() != null && !acessoDTO.porteiro().isBlank()) {
@@ -79,5 +79,75 @@ public class AcessoService {
         this.acessoRepository.save(acessoAberto);
 
         return AcessoResponseDTO.fromAcesso(acessoAberto);
+    }
+
+    public List<AcessoResponseDTO> listarTodos()
+    {
+        List<Acesso>acesso = this.acessoRepository.findAll();
+
+        if(acesso.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum acesso registrado no banco de dados");
+        }
+
+        return acesso.stream().map(AcessoResponseDTO::fromAcesso).toList();
+    }
+
+    public AcessoResponseDTO buscarID(Long id)
+    {
+        Acesso acessos = this.acessoRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("ID de acesso não encontrado"));
+        return AcessoResponseDTO.fromAcesso(acessos);
+    }
+
+    public List<AcessoResponseDTO> consultarDataHoraEntrada(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isBefore(inicio))
+        {
+            throw new DataException();
+        }
+
+        LocalDateTime inicioFormatado = inicio.atStartOfDay();
+        LocalDateTime fimFormatado = fim.atTime(LocalTime.MAX);
+
+        List<Acesso> acessos = this.acessoRepository.findByDataHoraEntradaBetween(inicioFormatado,fimFormatado);
+
+        if(acessos.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum registro cadastrado");
+        }
+
+        return acessos.stream().map(AcessoResponseDTO::fromAcesso).toList();
+    }
+
+    public List<AcessoResponseDTO> consultarDataHoraSaida(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isBefore(inicio))
+        {
+            throw new DataException();
+        }
+
+        LocalDateTime incioFormatado = inicio.atStartOfDay();
+        LocalDateTime fimFormatado  = fim.atTime(LocalTime.MAX);
+
+        List<Acesso>acessos = this.acessoRepository.findByDataHoraSaidaBetween(incioFormatado,fimFormatado);
+
+        if(acessos.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum registro cadastrado");
+        }
+
+        return acessos.stream().map(AcessoResponseDTO::fromAcesso).toList();
+    }
+
+    public List<AcessoResponseDTO> consultarTiposAcessos(TipoAcesso tipoAcesso)
+    {
+        List<Acesso>acessos = this.acessoRepository.findByTipoAcesso(tipoAcesso);
+
+        if(acessos.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum registro de acesso");
+        }
+
+        return acessos.stream().map(AcessoResponseDTO::fromAcesso).toList();
     }
 }
