@@ -26,11 +26,6 @@ public class MoradorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(moradorService.salvar(dto));
     }
 
-    @PostMapping("/morador/{moradorId}/veiculos/{veiculoId}")
-    public ResponseEntity<?> adicionarVeiculo(@PathVariable Long moradorId, @PathVariable Long veiculoId) {
-        return ResponseEntity.ok(moradorService.adicionarVeiculo(moradorId, veiculoId));
-    }
-
     @PostMapping("/morador/{moradorId}/visitantes/{visitanteId}")
     public ResponseEntity<?> adicionarVisitante(@PathVariable Long moradorId, @PathVariable Long visitanteId) {
         return ResponseEntity.ok( moradorService.adicionarVisitante(moradorId, visitanteId));

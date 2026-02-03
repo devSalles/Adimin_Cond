@@ -8,7 +8,9 @@ import Adimin_Cond.core.exception.VeiculoInativoException;
 import Adimin_Cond.dto.veiculo.VeiculoRequestDTO;
 import Adimin_Cond.dto.veiculo.VeiculoResponseDTO;
 import Adimin_Cond.dto.veiculo.VeiculoUpdateRequestDTO;
+import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.Veiculo;
+import Adimin_Cond.repository.MoradorRepository;
 import Adimin_Cond.repository.VeiculoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VeiculoService {
 
+    private final MoradorRepository moradorRepository;
     private final VeiculoRepository veiculoRepository;
 
     @Transactional
     public VeiculoResponseDTO salvarVeiculo(VeiculoRequestDTO veiculoDTO)
     {
-        Veiculo veiculo = veiculoDTO.toVeiculo();
+        Morador morador = this.moradorRepository.findById(veiculoDTO.idMorador()).orElseThrow(()->new IdNaoEncontradoException("ID de Morador não encontrado"));;
+        Veiculo veiculo = veiculoDTO.toVeiculo(morador);
 
         if(this.veiculoRepository.existsByPlaca(veiculoDTO.placa()))
         {

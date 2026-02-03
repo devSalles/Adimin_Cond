@@ -51,28 +51,6 @@ public class MoradorService {
     }
 
     @Transactional
-    public MoradorResponseDTO adicionarVeiculo(Long moradorId, Long veiculoId) {
-
-        Morador morador = buscarMorador(moradorId);
-        Veiculo veiculo = veiculoRepository.findById(veiculoId).orElseThrow(() -> new IdNaoEncontradoException("Veículo não encontrado"));
-
-        if(morador.getStatus() == StatusMorador.INATIVO)
-        {
-            throw new MoradorInativoException();
-        }
-
-        if(veiculo.getStatus() == StatusVeiculo.INATIVO)
-        {
-            throw new VeiculoInativoException("Veículo não pode ser vinculado pois está inativo");
-        }
-
-        morador.getVeiculos().add(veiculo);
-        moradorRepository.save(morador);
-
-        return MoradorResponseDTO.fromMorador(morador);
-    }
-
-    @Transactional
     public MoradorResponseDTO adicionarVisitante(Long moradorId, Long visitanteId) {
         Morador morador = buscarMorador(moradorId);
         Visitante visitante = visitanteRepository.findById(visitanteId).orElseThrow(() -> new IdNaoEncontradoException("Visitante não encontrado"));

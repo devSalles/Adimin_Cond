@@ -20,15 +20,18 @@ public record VeiculoRequestDTO(
         String modelo,
 
         @NotNull(message = "Cor obrigatória") @NotBlank(message = "Cor obrigatória")
-        String cor
+        String cor,
+
+        Long idMorador
 ) {
-    public Veiculo toVeiculo()
+    public Veiculo toVeiculo(Morador morador)
     {
         Veiculo veiculo = new Veiculo();
 
         veiculo.setPlaca(this.placa);
         veiculo.setModelo(this.modelo);
         veiculo.setCor(this.cor);
+        veiculo.setMorador(morador);
 
         return veiculo;
     }
