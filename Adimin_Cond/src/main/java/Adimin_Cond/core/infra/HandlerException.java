@@ -1,5 +1,6 @@
 package Adimin_Cond.core.infra;
 
+import Adimin_Cond.controller.AcessoController;
 import Adimin_Cond.core.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,6 +131,22 @@ public class HandlerException {
 
     @ExceptionHandler(VeiculoInativoException.class)
     public ResponseEntity<MessageRestError> VeiculoInativoException(VeiculoInativoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    //------------ EXCEÇÕES DE ACESSO ------------
+
+    @ExceptionHandler(AcessoRestritoException.class)
+    public ResponseEntity<MessageRestError> AcessoRestritoException(AcessoRestritoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(DataException.class)
+    public ResponseEntity<MessageRestError> AcessoRestritoException(DataException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);

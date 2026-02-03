@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Acesso {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -31,7 +30,7 @@ public class Acesso {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TipoAcesso tipo;
+    private TipoAcesso tipoAcesso;
 
     @ManyToOne
     @JoinColumn(name = "veiculo_id",nullable = false)
