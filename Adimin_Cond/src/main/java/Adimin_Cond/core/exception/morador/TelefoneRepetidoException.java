@@ -1,4 +1,4 @@
-package Adimin_Cond.core.exception;
+package Adimin_Cond.core.exception.morador;
 
 public class TelefoneRepetidoException extends RuntimeException {
     public TelefoneRepetidoException(String message) {

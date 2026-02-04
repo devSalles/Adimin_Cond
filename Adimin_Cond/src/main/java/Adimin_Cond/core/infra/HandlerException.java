@@ -1,7 +1,15 @@
 package Adimin_Cond.core.infra;
 
-import Adimin_Cond.controller.AcessoController;
 import Adimin_Cond.core.exception.*;
+import Adimin_Cond.core.exception.acesso.AcessoRestritoException;
+import Adimin_Cond.core.exception.apartamento.AptoIndisponivelException;
+import Adimin_Cond.core.exception.apartamento.ManutencaoException;
+import Adimin_Cond.core.exception.apartamento.MoradorDesvinculadoException;
+import Adimin_Cond.core.exception.apartamento.MoradorJaVinculadoException;
+import Adimin_Cond.core.exception.morador.*;
+import Adimin_Cond.core.exception.veiculo.PlacaNaoEncontradaException;
+import Adimin_Cond.core.exception.veiculo.PlacaRepetidaException;
+import Adimin_Cond.core.exception.veiculo.VeiculoInativoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

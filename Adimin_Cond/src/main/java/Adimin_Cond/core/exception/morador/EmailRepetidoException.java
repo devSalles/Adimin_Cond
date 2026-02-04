@@ -1,4 +1,4 @@
-package Adimin_Cond.core.exception;
+package Adimin_Cond.core.exception.morador;
 
 public class EmailRepetidoException extends RuntimeException {
     public EmailRepetidoException(String message) {

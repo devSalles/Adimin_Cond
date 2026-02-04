@@ -1,9 +1,9 @@
 package Adimin_Cond.service;
 
 import Adimin_Cond.Enum.StatusMorador;
-import Adimin_Cond.Enum.StatusVeiculo;
 import Adimin_Cond.Enum.StatusVisitante;
 import Adimin_Cond.core.exception.*;
+import Adimin_Cond.core.exception.morador.*;
 import Adimin_Cond.dto.morador.MoradorRequestDTO;
 import Adimin_Cond.dto.morador.MoradorResponseDTO;
 import Adimin_Cond.dto.morador.MoradorUpdateRequestDTO;

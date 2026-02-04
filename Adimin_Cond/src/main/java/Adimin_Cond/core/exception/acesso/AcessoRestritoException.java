@@ -1,4 +1,4 @@
-package Adimin_Cond.core.exception;
+package Adimin_Cond.core.exception.acesso;
 
 public class AcessoRestritoException extends RuntimeException {
     public AcessoRestritoException(String message) {
