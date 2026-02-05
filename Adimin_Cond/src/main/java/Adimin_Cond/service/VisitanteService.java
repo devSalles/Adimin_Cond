@@ -2,11 +2,14 @@ package Adimin_Cond.service;
 
 import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.Enum.StatusVisitante;
+import Adimin_Cond.core.exception.DataException;
 import Adimin_Cond.core.exception.IdNaoEncontradoException;
+import Adimin_Cond.core.exception.NenhumCadastroException;
 import Adimin_Cond.core.exception.acesso.AcessoRestritoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
 import Adimin_Cond.core.exception.visitante.DocumentoRepetidoException;
 import Adimin_Cond.core.exception.visitante.VisitaJaEmAndamentoException;
+import Adimin_Cond.core.exception.visitante.VisitaJaFinalizadaException;
 import Adimin_Cond.dto.visitante.VisitanteResponseDTO;
 import Adimin_Cond.dto.visitante.VisitanteSaidaRequestDTO;
 import Adimin_Cond.dto.visitante.VistanteEntradaRequestDTO;
@@ -18,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +33,7 @@ public class VisitanteService {
     private final VisitanteRepository visitanteRepository;
     private final MoradorRepository moradorRepository;
 
+    //Realizar otimização e correção de metodo
     @Transactional
     public VisitanteResponseDTO registrarVisita(VistanteEntradaRequestDTO visitaDTO)
     {
@@ -57,6 +64,8 @@ public class VisitanteService {
         return VisitanteResponseDTO.fromVisitante(visitante);
     }
 
+
+    //Realizar otimização e correção de metodo
     @Transactional
     public VisitanteResponseDTO registrarSaida(VisitanteSaidaRequestDTO visitaDTO)
     {
@@ -68,8 +77,11 @@ public class VisitanteService {
             throw new AcessoRestritoException("Visitante sem registro de entrada");
         }
 
-        acessoAbertoVisitante.setNome(visitaDTO.nome());
-        acessoAbertoVisitante.setDocumento(visitaDTO.documento());
+        if(acessoAbertoVisitante.getStatusVisitante() == StatusVisitante.FINALIZADA)
+        {
+            throw new VisitaJaFinalizadaException("Visita já finalizada");
+        }
+
         acessoAbertoVisitante.setMorador(morador);
         acessoAbertoVisitante.setDataSaida(LocalDateTime.now());
         acessoAbertoVisitante.setStatusVisitante(StatusVisitante.FINALIZADA);
@@ -77,5 +89,53 @@ public class VisitanteService {
         this.visitanteRepository.save(acessoAbertoVisitante);
 
         return VisitanteResponseDTO.fromVisitante(acessoAbertoVisitante);
+    }
+
+    public List<VisitanteResponseDTO> listarTodas()
+    {
+        List<Visitante> visitantes = this.visitanteRepository.findAll();
+
+        if(visitantes.isEmpty())
+        {
+            throw new NenhumCadastroException("Nnenhuma visita registrada");
+        }
+
+        return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
+    }
+
+    public VisitanteResponseDTO buscarID(Long id)
+    {
+        Visitante visitante = this.visitanteRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("Id de visitante não encontrado"));
+        return VisitanteResponseDTO.fromVisitante(visitante);
+    }
+
+    public List<VisitanteResponseDTO> pesquisarPeriodoDataEntrada(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isBefore(inicio))
+        {
+            throw new DataException("Data futura não pode ser maior que data pasada");
+        }
+
+        LocalDateTime inicioFormatado = inicio.atStartOfDay();
+        LocalDateTime finalFormatado = fim.atTime(LocalTime.MAX);
+
+        List<Visitante> visitantes = this.visitanteRepository.findByDataEntradaBetween(inicioFormatado,finalFormatado);
+
+        return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
+    }
+
+    public List<VisitanteResponseDTO> pesquisarPeriodoDataSaida(LocalDate inicio, LocalDate fim)
+    {
+        if(fim.isBefore(inicio))
+        {
+            throw new DataException("Data futura não pode ser maior que data pasada");
+        }
+
+        LocalDateTime inicioFormatado = inicio.atStartOfDay();
+        LocalDateTime finalFormatado = fim.atTime(LocalTime.MAX);
+
+        List<Visitante> visitantes = this.visitanteRepository.findByDataSaidaBetween(inicioFormatado,finalFormatado);
+
+        return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
     }
 }
