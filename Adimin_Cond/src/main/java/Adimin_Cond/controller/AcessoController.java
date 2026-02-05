@@ -43,6 +43,12 @@ public class AcessoController {
         return ResponseEntity.ok(acessos);
     }
 
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<?> buscarId(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(this.acessoService.buscarID(id));
+    }
+
     @GetMapping("/consultar-por-data-entrada")
     public ResponseEntity<?> consultarDataEntrada(
             @RequestParam("incio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDate inicio,

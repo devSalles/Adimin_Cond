@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -41,11 +42,11 @@ public class Morador {
     private Apartamento apartamento;
 
     @OneToMany(mappedBy = "morador")
-    private List<Veiculo> veiculos;
+    private List<Veiculo> veiculos = new ArrayList<>();
 
     @OneToMany(mappedBy = "morador")
-    private List<Visitante> visitantes;
+    private List<Visitante> visitantes = new ArrayList<>();
 
     @OneToMany(mappedBy = "morador")
-    private List<TaxaCondominio> taxaCondominio;
+    private List<TaxaCondominio> taxaCondominio = new ArrayList<>();
 }
