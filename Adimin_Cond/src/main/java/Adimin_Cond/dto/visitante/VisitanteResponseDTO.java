@@ -11,12 +11,12 @@ public record VisitanteResponseDTO(
         String documento,
         LocalDateTime dataEntrada,
         LocalDateTime dataSaida,
-        MoradorResponseDTO morador
+        Long moradorId
 ) {
 
     public static VisitanteResponseDTO fromVisitante(Visitante visitante)
     {
         return new VisitanteResponseDTO(visitante.getId(), visitante.getNome(), visitante.getDocumento(), visitante.getDataEntrada(),visitante.getDataSaida(),
-                visitante.getMorador() != null ? MoradorResponseDTO.fromMorador(visitante.getMorador()) : null);
+                visitante.getMorador().getId());
     }
 }

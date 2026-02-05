@@ -27,10 +27,10 @@ public class Visitante {
     @Column(nullable = false,unique = true)
     private String documento;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime dataEntrada;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime dataSaida;
 
     @Column(nullable = false)
