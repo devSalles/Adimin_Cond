@@ -1,5 +1,7 @@
 package Adimin_Cond.dto.visitante;
 
+import Adimin_Cond.Enum.StatusVisitante;
+import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.Visitante;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -16,9 +18,15 @@ public record VistanteRequestDTO(
         LocalDateTime dataEntrada,
 
         @NotNull(message = "Data de saída obrigatória") @FutureOrPresent(message = "A data de saída não pode ser no passado")
-        LocalDateTime dataSaida
+        LocalDateTime dataSaida,
+
+        @NotNull(message = "status de visitante obrigatório")
+        StatusVisitante statusVisitante,
+
+        @NotNull(message = "ID de morador obrigatório")
+        Long idMorador
 ) {
-    public Visitante toVisitante()
+    public Visitante toVisitante(Morador morador)
     {
         Visitante visitante = new Visitante();
 
@@ -26,7 +34,7 @@ public record VistanteRequestDTO(
         visitante.setDocumento(this.documento);
         visitante.setDataEntrada(this.dataEntrada);
         visitante.setDataSaida(this.dataSaida);
-
+        visitante.setMorador(morador);
 
         return visitante;
     }
