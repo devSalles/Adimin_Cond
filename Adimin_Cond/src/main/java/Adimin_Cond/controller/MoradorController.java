@@ -26,16 +26,6 @@ public class MoradorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(moradorService.salvar(dto));
     }
 
-    @PostMapping("/morador/{moradorId}/visitantes/{visitanteId}")
-    public ResponseEntity<?> adicionarVisitante(@PathVariable Long moradorId, @PathVariable Long visitanteId) {
-        return ResponseEntity.ok( moradorService.adicionarVisitante(moradorId, visitanteId));
-    }
-
-    @PostMapping("/morador/{moradorId}/taxas/{taxaId}")
-    public ResponseEntity<?> adicionarTaxaCondominio(@PathVariable Long moradorId, @PathVariable Long taxaId) {
-        return ResponseEntity.ok( moradorService.adicionarTaxaCondominio(moradorId, taxaId));
-    }
-
     @PutMapping("/atualizar-morador/{id}")
     public  ResponseEntity<?> atualizarMorador(@PathVariable Long id, @Valid @RequestBody MoradorUpdateRequestDTO dto)
     {

@@ -10,6 +10,7 @@ import Adimin_Cond.core.exception.morador.*;
 import Adimin_Cond.core.exception.veiculo.PlacaNaoEncontradaException;
 import Adimin_Cond.core.exception.veiculo.PlacaRepetidaException;
 import Adimin_Cond.core.exception.veiculo.VeiculoInativoException;
+import Adimin_Cond.core.exception.visitante.DocumentoRepetidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -159,4 +160,14 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
+
+    //------------ EXCEÇÕES DE VISITANTE ------------
+
+    @ExceptionHandler(DocumentoRepetidoException.class)
+    public ResponseEntity<MessageRestError> DocumentoRepetidoException ( DocumentoRepetidoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
 }

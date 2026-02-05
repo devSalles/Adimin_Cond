@@ -1,5 +1,6 @@
 package Adimin_Cond.entity;
 
+import Adimin_Cond.Enum.StatusVisitante;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class Visitante {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String documento;
 
     @Column(nullable = false)
@@ -31,6 +32,10 @@ public class Visitante {
 
     @Column(nullable = false)
     private LocalDateTime dataSaida;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    public StatusVisitante statusVisitante;
 
     @ManyToOne
     @JoinColumn(name = "morador_id")

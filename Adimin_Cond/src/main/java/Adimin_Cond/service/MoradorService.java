@@ -20,10 +20,6 @@ import java.util.List;
 public class MoradorService {
 
     private final MoradorRepository moradorRepository;
-    private final VeiculoRepository veiculoRepository;
-    private final TaxaCondominioRepository taxaCondominioRepository;
-    private final VisitanteRepository visitanteRepository;
-
     @Transactional
     public MoradorResponseDTO salvar(MoradorRequestDTO dto)
     {
@@ -48,39 +44,6 @@ public class MoradorService {
 
         return MoradorResponseDTO.fromMorador(morador);
 
-    }
-
-    @Transactional
-    public MoradorResponseDTO adicionarVisitante(Long moradorId, Long visitanteId) {
-        Morador morador = buscarMorador(moradorId);
-        Visitante visitante = visitanteRepository.findById(visitanteId).orElseThrow(() -> new IdNaoEncontradoException("Visitante não encontrado"));
-
-        if(morador.getStatus() == StatusMorador.INATIVO)
-        {
-            throw new MoradorInativoException();
-        }
-
-        morador.getVisitantes().add(visitante);
-        moradorRepository.save(morador);
-
-        return MoradorResponseDTO.fromMorador(morador);
-    }
-
-    @Transactional
-    public MoradorResponseDTO adicionarTaxaCondominio(Long moradorId, Long taxaId) {
-
-        Morador morador = buscarMorador(moradorId);
-        TaxaCondominio taxa = taxaCondominioRepository.findById(taxaId).orElseThrow(() -> new IdNaoEncontradoException("Taxa não encontrada"));
-
-        if(morador.getStatus() == StatusMorador.INATIVO)
-        {
-            throw new MoradorInativoException();
-        }
-
-        morador.getTaxaCondominio().add(taxa);
-        moradorRepository.save(morador);
-
-        return MoradorResponseDTO.fromMorador(morador);
     }
 
     @Transactional
