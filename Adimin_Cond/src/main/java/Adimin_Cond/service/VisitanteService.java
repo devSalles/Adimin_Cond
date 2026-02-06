@@ -7,7 +7,6 @@ import Adimin_Cond.core.exception.IdNaoEncontradoException;
 import Adimin_Cond.core.exception.NenhumCadastroException;
 import Adimin_Cond.core.exception.acesso.AcessoRestritoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
-import Adimin_Cond.core.exception.visitante.DocumentoRepetidoException;
 import Adimin_Cond.core.exception.visitante.VisitaJaEmAndamentoException;
 import Adimin_Cond.core.exception.visitante.VisitaJaFinalizadaException;
 import Adimin_Cond.dto.visitante.VisitanteResponseDTO;
@@ -33,7 +32,6 @@ public class VisitanteService {
     private final VisitanteRepository visitanteRepository;
     private final MoradorRepository moradorRepository;
 
-    //Realizar otimização e correção de metodo
     @Transactional
     public VisitanteResponseDTO registrarVisita(VistanteEntradaRequestDTO visitaDTO)
     {
@@ -44,12 +42,7 @@ public class VisitanteService {
             throw new MoradorInativoException("Morador está inativo e não pode receber visita");
         }
 
-        if(this.visitanteRepository.existsByDocumento(visitaDTO.documento()))
-        {
-            throw new DocumentoRepetidoException();
-        }
-
-        boolean visitaAtiva = this.visitanteRepository.existsByDocumentoAndStatusVisitante(visitaDTO.documento(),StatusVisitante.EM_VISITA);
+        boolean visitaAtiva = this.visitanteRepository.existsByCpfAndStatusVisitante(visitaDTO.cpf(),StatusVisitante.EM_VISITA);
         if(visitaAtiva)
         {
             throw new VisitaJaEmAndamentoException();
@@ -65,30 +58,25 @@ public class VisitanteService {
     }
 
 
-    //Realizar otimização e correção de metodo
     @Transactional
     public VisitanteResponseDTO registrarSaida(VisitanteSaidaRequestDTO visitaDTO)
     {
-        Morador morador = this.moradorRepository.findById(visitaDTO.idMorador()).orElseThrow(()->new IdNaoEncontradoException("Id de morador não encontrado"));
+        Visitante visitante = this.visitanteRepository.findByCpfAndStatusVisitante(visitaDTO.cpf(),StatusVisitante.EM_VISITA)
+                .orElseThrow(() -> new AcessoRestritoException("Visitante sem visita ativa"));
 
-        Visitante acessoAbertoVisitante = this.visitanteRepository.findByMoradorAndDataSaidaIsNull(morador);
-        if(acessoAbertoVisitante == null)
+        //Proteção de regra de negócio
+        LocalDateTime agora = LocalDateTime.now();
+        if(agora.isBefore(visitante.getDataEntrada()))
         {
-            throw new AcessoRestritoException("Visitante sem registro de entrada");
+            throw new DataException("Data de entrada de visitante não pode ser maior que data futura");
         }
 
-        if(acessoAbertoVisitante.getStatusVisitante() == StatusVisitante.FINALIZADA)
-        {
-            throw new VisitaJaFinalizadaException("Visita já finalizada");
-        }
+        visitante.setDataSaida(agora);
+        visitante.setStatusVisitante(StatusVisitante.FINALIZADA);
 
-        acessoAbertoVisitante.setMorador(morador);
-        acessoAbertoVisitante.setDataSaida(LocalDateTime.now());
-        acessoAbertoVisitante.setStatusVisitante(StatusVisitante.FINALIZADA);
+        this.visitanteRepository.save(visitante);
 
-        this.visitanteRepository.save(acessoAbertoVisitante);
-
-        return VisitanteResponseDTO.fromVisitante(acessoAbertoVisitante);
+        return VisitanteResponseDTO.fromVisitante(visitante);
     }
 
     public List<VisitanteResponseDTO> listarTodas()
