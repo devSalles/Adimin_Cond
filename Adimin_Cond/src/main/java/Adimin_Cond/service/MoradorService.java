@@ -110,6 +110,18 @@ public class MoradorService {
         return MoradorResponseDTO.fromMorador(morador);
     }
 
+    public List<MoradorResponseDTO> buscarPorStatus(StatusMorador statusMorador)
+    {
+        List<Morador> moradores = this.moradorRepository.findByStatus(statusMorador);
+
+        if(moradores.isEmpty())
+        {
+            throw new NenhumCadastroException("Nenhum morador cadastrado no sistema com esse status");
+        }
+
+        return moradores.stream().map(MoradorResponseDTO::fromMorador).toList();
+    }
+
     public MoradorResponseDTO buscarID(Long id)
     {
         Morador morador = this.moradorRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Morador não encontrado"));

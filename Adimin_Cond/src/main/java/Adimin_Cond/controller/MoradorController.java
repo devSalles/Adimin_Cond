@@ -1,5 +1,6 @@
 package Adimin_Cond.controller;
 
+import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.dto.morador.MoradorUpdateRequestDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,12 @@ public class MoradorController {
     public ResponseEntity<?> buscarNome(@PathVariable String nome)
     {
         return ResponseEntity.ok(this.moradorService.buscarNomeMorador(nome));
+    }
+
+    @GetMapping("/buscar-por-status/{status}")
+    public ResponseEntity<?> buscarPorStatus(@PathVariable StatusMorador status)
+    {
+        return ResponseEntity.ok(this.moradorService.buscarPorStatus(status));
     }
 
     @GetMapping("/buscar-CPF/{cpf}")
