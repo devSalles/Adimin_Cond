@@ -24,8 +24,8 @@ public class Visitante {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false,unique = true)
-    private String documento;
+    @Column(nullable = false)
+    private String cpf;
 
     @Column
     private LocalDateTime dataEntrada;

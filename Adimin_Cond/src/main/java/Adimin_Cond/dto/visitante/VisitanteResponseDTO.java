@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public record VisitanteResponseDTO(
         Long id,
         String nome,
-        String documento,
+        String cpf,
         LocalDateTime dataEntrada,
         LocalDateTime dataSaida,
         Long moradorId
@@ -16,7 +16,7 @@ public record VisitanteResponseDTO(
 
     public static VisitanteResponseDTO fromVisitante(Visitante visitante)
     {
-        return new VisitanteResponseDTO(visitante.getId(), visitante.getNome(), visitante.getDocumento(), visitante.getDataEntrada(),visitante.getDataSaida(),
+        return new VisitanteResponseDTO(visitante.getId(), visitante.getNome(), visitante.getCpf(), visitante.getDataEntrada(),visitante.getDataSaida(),
                 visitante.getMorador().getId());
     }
 }
