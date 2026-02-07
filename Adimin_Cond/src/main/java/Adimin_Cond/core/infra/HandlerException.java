@@ -7,6 +7,7 @@ import Adimin_Cond.core.exception.apartamento.ManutencaoException;
 import Adimin_Cond.core.exception.apartamento.MoradorDesvinculadoException;
 import Adimin_Cond.core.exception.apartamento.MoradorJaVinculadoException;
 import Adimin_Cond.core.exception.morador.*;
+import Adimin_Cond.core.exception.taxa.TaxaJaPagaException;
 import Adimin_Cond.core.exception.veiculo.PlacaNaoEncontradaException;
 import Adimin_Cond.core.exception.veiculo.PlacaRepetidaException;
 import Adimin_Cond.core.exception.veiculo.VeiculoInativoException;
@@ -178,4 +179,20 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 
+
+    //------------ EXCEÇÕES DE TAXA CONDOMÍNIO ------------
+
+    @ExceptionHandler(TaxaJaPagaException.class)
+    public ResponseEntity<MessageRestError> TaxaJaPagaException(TaxaJaPagaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+//    @ExceptionHandler(TaxaJaPagaException.class)
+//    public ResponseEntity<MessageRestError> TaxaJaPagaException(TaxaJaPagaException ex)
+//    {
+//        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+//        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+//    }
 }
