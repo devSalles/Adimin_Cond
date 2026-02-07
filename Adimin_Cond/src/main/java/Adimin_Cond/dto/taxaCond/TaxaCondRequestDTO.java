@@ -1,11 +1,9 @@
 package Adimin_Cond.dto.taxaCond;
 
-import Adimin_Cond.Enum.StatusTaxa;
+import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.TaxaCondominio;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public record TaxaCondRequestDTO(
@@ -14,22 +12,26 @@ public record TaxaCondRequestDTO(
         String referencia,
 
         @NotNull(message = "Valor da taxa obrigatório") @PositiveOrZero(message = "Valor inválido")
-        BigDecimal valor,
+        Double valor,
 
-        @NotNull(message = "Data de vencimento obrigatória") @Future(message = "A data de vencimento deve ser posterior a data atual")
+//        @NotNull(message = "Data de vencimento obrigatória") @Future(message = "A data de vencimento deve ser posterior a data atual")
         LocalDate dataVencimento,
 
-        @NotNull(message = "Status da taxa obrigatório") @Enumerated(EnumType.STRING)
-        StatusTaxa status
+//        @NotNull(message = "Data de pagamento obrigatória") @Future(message = "A data de pagamento deve ser posterior a data atual")
+        LocalDate dataPagamento,
+
+        Long idMorador
 ) {
 
-    public TaxaCondominio toTaxaCond()
+    public TaxaCondominio toTaxaCond(Morador morador)
     {
         TaxaCondominio taxaCondominio = new TaxaCondominio();
 
+        taxaCondominio.setReferencia(this.referencia);
         taxaCondominio.setValor(this.valor);
         taxaCondominio.setDataVencimento(this.dataVencimento);
-        taxaCondominio.setStatus(this.status);
+        taxaCondominio.setDataPagamento(this.dataPagamento);
+        taxaCondominio.setMorador(morador);
 
         return taxaCondominio;
     }

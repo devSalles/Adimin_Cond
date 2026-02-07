@@ -9,13 +9,14 @@ import java.time.LocalDate;
 public record TaxaCondResponseDTO(
         Long id,
         String referencia,
-        BigDecimal valor,
+        Double valorFinal,
+        Double multa ,
         LocalDate dataVencimento,
         StatusTaxa status
 ) {
 
     public static TaxaCondResponseDTO fromTaxaCond(TaxaCondominio taxa)
     {
-        return new TaxaCondResponseDTO(taxa.getId(), taxa.getReferencia(),taxa.getValor(),taxa.getDataVencimento(),taxa.getStatus());
+        return new TaxaCondResponseDTO(taxa.getId(), taxa.getReferencia(),taxa.getValor(), taxa.getMulta(),taxa.getDataVencimento(),taxa.getStatus());
     }
 }

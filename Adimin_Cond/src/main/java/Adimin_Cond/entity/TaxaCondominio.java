@@ -26,8 +26,14 @@ public class TaxaCondominio {
     @Column(nullable = false)
     private String referencia;
 
-    @Column(nullable = false,precision = 10,scale = 2)
-    private BigDecimal valor;
+    @Column(nullable = false)
+    private Double valor;
+
+    @Column
+    private Double multa=0.08;
+
+    @Column
+    private LocalDate dataPagamento;
 
     @Column(nullable = false)
     private LocalDate dataVencimento;

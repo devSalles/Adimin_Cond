@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaxaCondominioRepository extends JpaRepository<TaxaCondominio,Long> {
+
+    boolean existsByReferencia(String referencia);
 }
