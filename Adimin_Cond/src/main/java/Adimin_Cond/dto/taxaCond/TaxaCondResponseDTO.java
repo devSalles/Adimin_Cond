@@ -12,11 +12,13 @@ public record TaxaCondResponseDTO(
         Double valorFinal,
         Double multa ,
         LocalDate dataVencimento,
+        LocalDate dataPagamento,
         StatusTaxa status
 ) {
 
     public static TaxaCondResponseDTO fromTaxaCond(TaxaCondominio taxa)
     {
-        return new TaxaCondResponseDTO(taxa.getId(), taxa.getReferencia(),taxa.getValor(), taxa.getMulta(),taxa.getDataVencimento(),taxa.getStatus());
+        return new TaxaCondResponseDTO(taxa.getId(), taxa.getReferencia(),taxa.getValor(), taxa.getMulta(),taxa.getDataVencimento(),
+                taxa.getDataPagamento(),taxa.getStatus());
     }
 }

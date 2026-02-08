@@ -2,6 +2,7 @@ package Adimin_Cond.service;
 
 import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.Enum.StatusTaxa;
+import Adimin_Cond.core.exception.DataException;
 import Adimin_Cond.core.exception.IdNaoEncontradoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
 import Adimin_Cond.core.exception.taxa.ReferenciaRepetidaException;
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 
 @Service
@@ -76,5 +80,57 @@ public class TaxaCondominioService {
         this.taxaCondominioRepository.save(taxa);
 
         return TaxaCondResponseDTO.fromTaxaCond(taxa);
+    }
+
+    public TaxaCondResponseDTO buscarID(Long id)
+    {
+        TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa no encontrada"));
+        return TaxaCondResponseDTO.fromTaxaCond(taxa);
+    }
+
+    public List<TaxaCondResponseDTO> listarTodos()
+    {
+        List<TaxaCondominio> taxas = this.taxaCondominioRepository.findAll();
+
+        if(taxas.isEmpty())
+        {
+            throw new IdNaoEncontradoException("Nenhum cadastro de taxas");
+        }
+
+        return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
+    }
+
+    public List<TaxaCondResponseDTO> buscarPorDataDePagamento(LocalDate incio, LocalDate fim)
+    {
+        if(fim.isBefore(incio))
+        {
+            throw new DataException("Data futura não pode ser maior que data passada");
+        }
+
+        List<TaxaCondominio> taxas = this.taxaCondominioRepository.findByDataPagamentoBetween(incio,fim);
+
+        if(taxas.isEmpty())
+        {
+            throw new IdNaoEncontradoException("Nenhum cadastro de taxas nessa data");
+        }
+
+        return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
+    }
+
+    public List<TaxaCondResponseDTO> buscarPorDataDeVencimento(LocalDate incio, LocalDate fim)
+    {
+        if(fim.isBefore(incio))
+        {
+            throw new DataException("Data futura não pode ser maior que data passada");
+        }
+
+        List<TaxaCondominio> taxas = this.taxaCondominioRepository.findByDataVencimentoBetween(incio,fim);
+
+        if(taxas.isEmpty())
+        {
+            throw new IdNaoEncontradoException("Nenhum cadastro de taxas nessa data");
+        }
+
+        return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
     }
 }

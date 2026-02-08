@@ -5,9 +5,13 @@ import Adimin_Cond.dto.taxaCond.TaxaCondResponseDTO;
 import Adimin_Cond.service.TaxaCondominioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/taxas")
@@ -16,15 +20,43 @@ public class TaxaCondominioController {
 
     private final TaxaCondominioService taxaCondominioService;
 
-    @PostMapping
+    @PostMapping("/adicionar-taxa")
     public ResponseEntity<TaxaCondResponseDTO> gerarTaxa(@RequestBody @Valid TaxaCondRequestDTO taxaDTO) {
         TaxaCondResponseDTO response = taxaCondominioService.gerarTaxa(taxaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/pagar/{id}")
+    @PatchMapping("/pagar-taxa/{id}")
     public ResponseEntity<TaxaCondResponseDTO> pagarTaxa(@PathVariable Long id) {
         TaxaCondResponseDTO response = taxaCondominioService.pagarTaxa(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<TaxaCondResponseDTO> buscarPorId(@PathVariable Long id) {
+        TaxaCondResponseDTO response = taxaCondominioService.buscarID(id);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/listar-todos")
+    public ResponseEntity<List<TaxaCondResponseDTO>> listarTodas() {
+        List<TaxaCondResponseDTO> response = taxaCondominioService.listarTodos();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/data-pagamento")
+    public ResponseEntity<List<TaxaCondResponseDTO>> buscarPorDataPagamento(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        List<TaxaCondResponseDTO> response = taxaCondominioService.buscarPorDataDePagamento(inicio, fim);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/data-vencimento")
+    public ResponseEntity<List<TaxaCondResponseDTO>> buscarPorDataVencimento(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        List<TaxaCondResponseDTO> response = taxaCondominioService.buscarPorDataDeVencimento(inicio, fim);
         return ResponseEntity.ok(response);
     }
 }
