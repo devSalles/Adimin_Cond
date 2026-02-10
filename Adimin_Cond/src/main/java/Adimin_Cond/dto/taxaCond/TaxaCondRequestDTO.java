@@ -17,9 +17,6 @@ public record TaxaCondRequestDTO(
 //        @NotNull(message = "Data de vencimento obrigatória") @Future(message = "A data de vencimento deve ser posterior a data atual")
         LocalDate dataVencimento,
 
-//        @NotNull(message = "Data de pagamento obrigatória") @Future(message = "A data de pagamento deve ser posterior a data atual")
-        LocalDate dataPagamento,
-
         Long idMorador
 ) {
 
@@ -30,7 +27,6 @@ public record TaxaCondRequestDTO(
         taxaCondominio.setReferencia(this.referencia);
         taxaCondominio.setValor(this.valor);
         taxaCondominio.setDataVencimento(this.dataVencimento);
-        taxaCondominio.setDataPagamento(this.dataPagamento);
         taxaCondominio.setMorador(morador);
 
         return taxaCondominio;

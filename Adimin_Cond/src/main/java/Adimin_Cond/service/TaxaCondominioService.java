@@ -16,10 +16,7 @@ import Adimin_Cond.repository.TaxaCondominioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -53,30 +50,29 @@ public class TaxaCondominioService {
     }
 
     @Transactional
-     public TaxaCondResponseDTO pagarTaxa(Long id)
+     public TaxaCondResponseDTO pagarTaxa(Long id,LocalDate dataPagamento)
     {
-        TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa no encontrada"));
+        TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa não encontrada"));
 
         if(taxa.getStatus() == StatusTaxa.PAGA)
         {
             throw new TaxaJaPagaException("A taxa já foi paga");
         }
 
-        if(taxa.getDataPagamento().isBefore(taxa.getDataVencimento()))
+        taxa.setDataPagamento(dataPagamento);
+        taxa.setStatus(StatusTaxa.PAGA);
+
+        if(taxa.getDataPagamento().isAfter(taxa.getDataVencimento()))
         {
-            double valorFinalTaxa = taxa.getMulta() + taxa.getValor();
-
+            final Double multa = 0.08;
+            double valorFinalTaxa = taxa.getValor() * (1 + multa);
             taxa.setValor(valorFinalTaxa);
-            taxa.setStatus(StatusTaxa.PAGA);
-            taxa.setDataPagamento(LocalDate.now());
-
-            this.taxaCondominioRepository.save(taxa);
-
-            return TaxaCondResponseDTO.fromTaxaCond(taxa);
+        }
+        else
+        {
+            taxa.setMulta(0.0);
         }
 
-        taxa.setStatus(StatusTaxa.PAGA);
-        taxa.setDataPagamento(LocalDate.now());
         this.taxaCondominioRepository.save(taxa);
 
         return TaxaCondResponseDTO.fromTaxaCond(taxa);

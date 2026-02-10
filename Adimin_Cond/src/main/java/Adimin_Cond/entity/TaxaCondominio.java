@@ -30,7 +30,7 @@ public class TaxaCondominio {
     private Double valor;
 
     @Column
-    private Double multa=0.08;
+    private Double multa=0.0;
 
     @Column
     private LocalDate dataPagamento;

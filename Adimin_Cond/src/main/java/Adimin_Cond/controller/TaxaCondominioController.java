@@ -27,8 +27,9 @@ public class TaxaCondominioController {
     }
 
     @PatchMapping("/pagar-taxa/{id}")
-    public ResponseEntity<TaxaCondResponseDTO> pagarTaxa(@PathVariable Long id) {
-        TaxaCondResponseDTO response = taxaCondominioService.pagarTaxa(id);
+    public ResponseEntity<TaxaCondResponseDTO> pagarTaxa(@PathVariable Long id,
+                                                         @RequestParam("dataPagamento") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataPagamento) {
+        TaxaCondResponseDTO response = taxaCondominioService.pagarTaxa(id,dataPagamento);
         return ResponseEntity.ok(response);
     }
 

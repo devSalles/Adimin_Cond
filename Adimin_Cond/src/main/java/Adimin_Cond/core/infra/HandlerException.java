@@ -189,10 +189,10 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 
-//    @ExceptionHandler(TaxaJaPagaException.class)
-//    public ResponseEntity<MessageRestError> TaxaJaPagaException(TaxaJaPagaException ex)
-//    {
-//        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
-//        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
-//    }
+    @ExceptionHandler(ReflectiveOperationException.class)
+    public ResponseEntity<MessageRestError> ReflectiveOperationException(ReflectiveOperationException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
 }
