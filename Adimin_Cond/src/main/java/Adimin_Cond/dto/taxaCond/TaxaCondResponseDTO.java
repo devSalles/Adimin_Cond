@@ -13,12 +13,13 @@ public record TaxaCondResponseDTO(
         Double multa ,
         LocalDate dataVencimento,
         LocalDate dataPagamento,
-        StatusTaxa status
+        StatusTaxa status,
+        Long idMorador
 ) {
 
     public static TaxaCondResponseDTO fromTaxaCond(TaxaCondominio taxa)
     {
         return new TaxaCondResponseDTO(taxa.getId(), taxa.getReferencia(),taxa.getValor(), taxa.getMulta(),taxa.getDataVencimento(),
-                taxa.getDataPagamento(),taxa.getStatus());
+                taxa.getDataPagamento(),taxa.getStatus(),taxa.getMorador().getId());
     }
 }
