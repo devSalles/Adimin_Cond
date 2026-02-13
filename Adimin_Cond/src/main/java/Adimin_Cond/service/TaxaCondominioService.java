@@ -14,6 +14,8 @@ import Adimin_Cond.entity.TaxaCondominio;
 import Adimin_Cond.repository.MoradorRepository;
 import Adimin_Cond.repository.TaxaCondominioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -76,6 +78,12 @@ public class TaxaCondominioService {
         this.taxaCondominioRepository.save(taxa);
 
         return TaxaCondResponseDTO.fromTaxaCond(taxa);
+    }
+
+    @Transactional
+    public int atualizarTaxasAtrasadas()
+    {
+        return this.taxaCondominioRepository.atualizarTaxasAtrasadas();
     }
 
     public TaxaCondResponseDTO buscarID(Long id)
