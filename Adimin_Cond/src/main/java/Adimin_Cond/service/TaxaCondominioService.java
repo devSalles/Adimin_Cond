@@ -14,8 +14,6 @@ import Adimin_Cond.entity.TaxaCondominio;
 import Adimin_Cond.repository.MoradorRepository;
 import Adimin_Cond.repository.TaxaCondominioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -38,7 +36,7 @@ public class TaxaCondominioService {
             throw new MoradorInativoException("Morador inativo não pode receber taxa");
         }
 
-        boolean referenciaRepetida = this.taxaCondominioRepository.existsByReferencia(taxaDTO.referencia());
+        boolean referenciaRepetida = this.taxaCondominioRepository.existsByReferenciaAndMoradorId(taxaDTO.referencia() ,morador.getId());
         if(referenciaRepetida)
         {
             throw new ReferenciaRepetidaException("Não pode existir mais de uma taxa com a mesma referência para o mesmo morador");
@@ -80,16 +78,21 @@ public class TaxaCondominioService {
         return TaxaCondResponseDTO.fromTaxaCond(taxa);
     }
 
-    @Transactional
-    public int atualizarTaxasAtrasadas()
-    {
-        return this.taxaCondominioRepository.atualizarTaxasAtrasadas();
-    }
-
     public TaxaCondResponseDTO buscarID(Long id)
     {
         TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa no encontrada"));
+
+        atualizarStatusAtrasado(taxa);
+
         return TaxaCondResponseDTO.fromTaxaCond(taxa);
+    }
+
+    private void atualizarStatusAtrasado(TaxaCondominio taxa)
+    {
+        if(taxa.getStatus() == StatusTaxa.PENDENTE && taxa.getDataVencimento().isBefore(LocalDate.now()))
+        {
+            taxa.setStatus(StatusTaxa.ATRASADA);
+        }
     }
 
     public List<TaxaCondResponseDTO> listarTodos()
@@ -99,6 +102,11 @@ public class TaxaCondominioService {
         if(taxas.isEmpty())
         {
             throw new IdNaoEncontradoException("Nenhum cadastro de taxas");
+        }
+
+        for(TaxaCondominio taxasAtrasadas : taxas)
+        {
+            atualizarStatusAtrasado(taxasAtrasadas);
         }
 
         return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
