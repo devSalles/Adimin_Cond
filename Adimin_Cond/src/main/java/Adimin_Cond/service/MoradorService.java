@@ -9,6 +9,8 @@ import Adimin_Cond.dto.morador.MoradorResponseDTO;
 import Adimin_Cond.dto.morador.MoradorUpdateRequestDTO;
 import Adimin_Cond.entity.*;
 import Adimin_Cond.repository.*;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +40,12 @@ public class MoradorService {
             throw new TelefoneRepetidoException();
         }
 
+        String cpfFormatado = formatarCpf(dto.cpf());
+
         Morador morador = dto.toMorador();
         morador.setStatus(StatusMorador.ATIVO);
+        morador.setCpf(cpfFormatado);
+
         this.moradorRepository.save(morador);
 
         return MoradorResponseDTO.fromMorador(morador);
@@ -54,6 +60,21 @@ public class MoradorService {
         if(morador.getStatus() == StatusMorador.INATIVO)
         {
             throw new MoradorInativoException("Morador está com status inativo");
+        }
+
+        if(this.moradorRepository.existsByEmail(dto.email()))
+        {
+            throw new EmailRepetidoException();
+        }
+
+        if(this.moradorRepository.existsByCpf(dto.cpf()))
+        {
+            throw new CpfRepetidoException();
+        }
+
+        if(this.moradorRepository.existsByTelefone(dto.telefone()))
+        {
+            throw new TelefoneRepetidoException();
         }
 
         dto.updateMorador(morador);
@@ -88,7 +109,8 @@ public class MoradorService {
 
     public MoradorResponseDTO buscarCPFMorador(String cpf)
     {
-        Morador morador = this.moradorRepository.findByCpf(cpf);
+        String cpfLimpo = cpf.replaceAll("\\D","");
+        Morador morador = this.moradorRepository.findByCpf(cpfLimpo);
 
         if(morador == null)
         {
@@ -151,6 +173,12 @@ public class MoradorService {
     }
 
     //--------------------- METODOS AUXILIARES ---------------------
+
+    @PrePersist
+    private String formatarCpf(String cpf)
+    {
+        return cpf.replaceAll("\\D","");
+    }
 
     private Morador buscarMorador(Long id) {
         Morador morador = moradorRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Morador não encontrado"));

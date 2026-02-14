@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/visitantes")
+@RequestMapping("/visitante")
 @RequiredArgsConstructor
 @Tag(name = "Visitante")
 public class VisitanteController {

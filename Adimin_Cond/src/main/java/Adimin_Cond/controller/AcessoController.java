@@ -18,7 +18,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/acessos")
+@RequestMapping("/acesso")
 @Tag(name = "Acesso")
 public class AcessoController {
 

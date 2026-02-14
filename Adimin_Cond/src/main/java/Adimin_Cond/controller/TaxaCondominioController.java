@@ -3,6 +3,7 @@ package Adimin_Cond.controller;
 import Adimin_Cond.dto.taxaCond.TaxaCondRequestDTO;
 import Adimin_Cond.dto.taxaCond.TaxaCondResponseDTO;
 import Adimin_Cond.service.TaxaCondominioService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/taxas")
 @RequiredArgsConstructor
+@Tag(name = "Taxa Condomínio")
 public class TaxaCondominioController {
 
     private final TaxaCondominioService taxaCondominioService;

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/moradores")
+@RequestMapping("/morador")
 @RequiredArgsConstructor
-@Tag(name = "Moradores")
+@Tag(name = "Morador")
 public class MoradorController {
 
     private final MoradorService moradorService;
