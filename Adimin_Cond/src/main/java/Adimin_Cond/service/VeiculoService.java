@@ -113,7 +113,7 @@ public class VeiculoService {
         return VeiculoResponseDTO.fromVeiculo(veiculo);
     }
 
-    // //------------ METODOS AUXILIARES ------------
+    //------------ METODOS AUXILIARES ------------
 
     public String limparPlaca(String placa)
     {

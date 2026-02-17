@@ -78,6 +78,15 @@ public class TaxaCondominioService {
         return TaxaCondResponseDTO.fromTaxaCond(taxa);
     }
 
+    //Metodo responsável por atualizar status de taxas com pagamentos atrasados
+    private void atualizarStatusAtrasado(TaxaCondominio taxa)
+    {
+        if(taxa.getStatus() == StatusTaxa.PENDENTE && taxa.getDataVencimento().isBefore(LocalDate.now()))
+        {
+            taxa.setStatus(StatusTaxa.ATRASADA);
+        }
+    }
+
     public TaxaCondResponseDTO buscarID(Long id)
     {
         TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa no encontrada"));
@@ -85,14 +94,6 @@ public class TaxaCondominioService {
         atualizarStatusAtrasado(taxa);
 
         return TaxaCondResponseDTO.fromTaxaCond(taxa);
-    }
-
-    private void atualizarStatusAtrasado(TaxaCondominio taxa)
-    {
-        if(taxa.getStatus() == StatusTaxa.PENDENTE && taxa.getDataVencimento().isBefore(LocalDate.now()))
-        {
-            taxa.setStatus(StatusTaxa.ATRASADA);
-        }
     }
 
     public List<TaxaCondResponseDTO> listarTodos()
