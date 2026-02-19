@@ -1,6 +1,7 @@
 package Adimin_Cond.repository;
 
 import Adimin_Cond.Enum.StatusVisitante;
+import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.Visitante;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,6 @@ public interface VisitanteRepository extends JpaRepository<Visitante,Long> {
     List<Visitante> findByDataEntradaBetween(LocalDateTime inicio, LocalDateTime fim);
 
     List<Visitante> findByDataSaidaBetween(LocalDateTime inicio, LocalDateTime fim);
+
+    boolean existsByMoradorIdAndStatusVisitante(Long idMorador, StatusVisitante statusVisitantes);
 }

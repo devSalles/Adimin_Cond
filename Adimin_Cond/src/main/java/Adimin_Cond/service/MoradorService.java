@@ -22,6 +22,8 @@ import java.util.List;
 public class MoradorService {
 
     private final MoradorRepository moradorRepository;
+    private final VisitanteRepository visitanteRepository;
+
     @Transactional
     public MoradorResponseDTO salvar(MoradorRequestDTO dto)
     {
@@ -67,16 +69,6 @@ public class MoradorService {
             throw new EmailRepetidoException();
         }
 
-        if(this.moradorRepository.existsByCpf(dto.cpf()))
-        {
-            throw new CpfRepetidoException();
-        }
-
-        if(this.moradorRepository.existsByTelefone(dto.telefone()))
-        {
-            throw new TelefoneRepetidoException();
-        }
-
         dto.updateMorador(morador);
         this.moradorRepository.save(morador);
 
@@ -95,16 +87,16 @@ public class MoradorService {
         return moradores.stream().map(MoradorResponseDTO::fromMorador).toList();
     }
 
-    public MoradorResponseDTO buscarNomeMorador(String nome)
+    public List<MoradorResponseDTO> buscarNomeMorador(String nome)
     {
-        Morador morador = this.moradorRepository.findByNome(nome);
+        List<Morador> morador = this.moradorRepository.findByNome(nome);
 
         if(morador == null)
         {
             throw new NenhumCadastroException("Nome não encontrado");
         }
 
-        return MoradorResponseDTO.fromMorador(morador);
+        return morador.stream().map(MoradorResponseDTO::fromMorador).toList();
     }
 
     public MoradorResponseDTO buscarCPFMorador(String cpf)
@@ -160,7 +152,7 @@ public class MoradorService {
             throw new MoradorInativoException("Morador já está inativo");
         }
 
-        boolean visitanteAtivo = this.moradorRepository.existsByVisitantesAndStatusIn(id, List.of(StatusVisitante.EM_VISITA));
+        boolean visitanteAtivo = this.visitanteRepository.existsByMoradorIdAndStatusVisitante(id, StatusVisitante.EM_VISITA);
         if(visitanteAtivo)
         {
             throw new VisitaAtivaException();

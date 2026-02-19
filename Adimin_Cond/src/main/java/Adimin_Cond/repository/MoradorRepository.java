@@ -17,13 +17,11 @@ public interface MoradorRepository extends JpaRepository<Morador,Long> {
 
     boolean existsByTelefone(String telefone);
 
-    Morador findByNome(String nome);
+    List<Morador> findByNome(String nome);
 
     Morador findByCpf(String cpf);
 
     Morador findByEmail(String cpf);
 
     List<Morador>findByStatus(StatusMorador statusMorador);
-
-    boolean existsByVisitantesAndStatusIn(Long id, List<StatusVisitante> statusVisitantes);
 }
