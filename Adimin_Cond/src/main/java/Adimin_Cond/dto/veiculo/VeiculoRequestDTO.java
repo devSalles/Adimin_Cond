@@ -22,6 +22,7 @@ public record VeiculoRequestDTO(
         @NotNull(message = "Cor obrigatória") @NotBlank(message = "Cor obrigatória")
         String cor,
 
+        @NotNull(message = "ID de morador obrigatório")
         Long idMorador
 ) {
     public Veiculo toVeiculo(Morador morador)
