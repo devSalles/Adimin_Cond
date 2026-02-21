@@ -2,7 +2,6 @@ package Adimin_Cond.controller;
 
 import Adimin_Cond.Enum.StatusApartamento;
 import Adimin_Cond.dto.apartamento.ApartamentoRequestDTO;
-import Adimin_Cond.dto.apartamento.ApartamentoUpdateRequestDTO;
 import Adimin_Cond.service.ApartamentoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,6 +23,12 @@ public class ApartamentoController {
         return ResponseEntity.ok(this.apartamentoService.salvar(dto));
     }
 
+    @PostMapping("/vinvular-apartamento/{idApartamento}/{idMorador}")
+    public ResponseEntity<?> vincular(@PathVariable Long idApartamento ,@PathVariable Long idMorador)
+    {
+        return ResponseEntity.ok(this.apartamentoService.vincularApartamento(idApartamento,idMorador));
+    }
+
     @PostMapping("/desvincular-apartamento/{id}")
     public ResponseEntity<?> desvincularApartamento(@PathVariable Long id)
     {
@@ -31,7 +36,7 @@ public class ApartamentoController {
     }
 
     @PutMapping("/atualizarApto-id/{id}")
-    public ResponseEntity<?> atualizarApto(@PathVariable Long id, @Valid @RequestBody ApartamentoUpdateRequestDTO dto)
+    public ResponseEntity<?> atualizarApto(@PathVariable Long id, @Valid @RequestBody ApartamentoRequestDTO dto)
     {
         return ResponseEntity.ok(this.apartamentoService.atualizarApartamento(id,dto));
     }

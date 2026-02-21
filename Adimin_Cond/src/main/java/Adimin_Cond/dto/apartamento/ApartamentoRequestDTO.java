@@ -15,15 +15,23 @@ public record ApartamentoRequestDTO(
         @NotNull(message = "Andar obrigatório") @Positive(message = "Andar inválido")
         Integer andar,
 
-        String observacoes,
-
-        @NotNull(message = "ID de morador obrigatório")
-        Long idMorador
+        String observacoes
 ) {
     public Apartamento toApartamento()
     {
         Apartamento apartamento = new Apartamento();
 
+        apartamento.setNumero(this.numero);
+        apartamento.setBloco(this.bloco);
+        apartamento.setAndar(this.andar);
+        apartamento.setObservacoes(this.observacoes);
+
+        return apartamento;
+    }
+
+
+    public Apartamento updateApartamento(Apartamento apartamento)
+    {
         apartamento.setNumero(this.numero);
         apartamento.setBloco(this.bloco);
         apartamento.setAndar(this.andar);
