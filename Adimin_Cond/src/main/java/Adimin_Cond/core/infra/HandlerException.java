@@ -11,8 +11,7 @@ import Adimin_Cond.core.exception.taxa.TaxaJaPagaException;
 import Adimin_Cond.core.exception.veiculo.PlacaNaoEncontradaException;
 import Adimin_Cond.core.exception.veiculo.PlacaRepetidaException;
 import Adimin_Cond.core.exception.veiculo.VeiculoInativoException;
-import Adimin_Cond.core.exception.visitante.DocumentoRepetidoException;
-import Adimin_Cond.core.exception.visitante.VisitaJaFinalizadaException;
+import Adimin_Cond.core.exception.visitante.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -179,7 +178,26 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 
+    @ExceptionHandler(VisitaJaEmAndamentoException.class)
+    public ResponseEntity<MessageRestError> VisitaJaEmAndamentoException(VisitaJaEmAndamentoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
 
+    @ExceptionHandler(VisitanteNaoEncontradoException.class)
+    public ResponseEntity<MessageRestError> VisitanteNaoEncontradoException(VisitanteNaoEncontradoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
+
+    @ExceptionHandler(NomeDeVisitanteNaoEncontradoException.class)
+    public ResponseEntity<MessageRestError> NomeNaoEncontradoException(NomeDeVisitanteNaoEncontradoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+    }
     //------------ EXCEÇÕES DE TAXA CONDOMÍNIO ------------
 
     @ExceptionHandler(TaxaJaPagaException.class)
