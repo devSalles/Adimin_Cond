@@ -7,8 +7,10 @@ import Adimin_Cond.core.exception.IdNaoEncontradoException;
 import Adimin_Cond.core.exception.NenhumCadastroException;
 import Adimin_Cond.core.exception.acesso.AcessoRestritoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
+import Adimin_Cond.core.exception.visitante.NomeDeVisitanteNaoEncontradoException;
 import Adimin_Cond.core.exception.visitante.VisitaJaEmAndamentoException;
 import Adimin_Cond.core.exception.visitante.VisitaJaFinalizadaException;
+import Adimin_Cond.core.exception.visitante.VisitanteNaoEncontradoException;
 import Adimin_Cond.dto.visitante.VisitanteResponseDTO;
 import Adimin_Cond.dto.visitante.VisitanteSaidaRequestDTO;
 import Adimin_Cond.dto.visitante.VistanteEntradaRequestDTO;
@@ -57,7 +59,6 @@ public class VisitanteService {
         return VisitanteResponseDTO.fromVisitante(visitante);
     }
 
-
     @Transactional
     public VisitanteResponseDTO registrarSaida(VisitanteSaidaRequestDTO visitaDTO)
     {
@@ -95,6 +96,18 @@ public class VisitanteService {
     {
         Visitante visitante = this.visitanteRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("Id de visitante não encontrado"));
         return VisitanteResponseDTO.fromVisitante(visitante);
+    }
+
+    public VisitanteResponseDTO buscarPorCPF(String cpf)
+    {
+        Visitante visitanteCPF = this.visitanteRepository.findByCpf(cpf).orElseThrow(VisitanteNaoEncontradoException::new);
+        return VisitanteResponseDTO.fromVisitante(visitanteCPF);
+    }
+
+    public VisitanteResponseDTO buscarPorNome(String nome)
+    {
+        Visitante visitanteNome = this.visitanteRepository.findByNome(nome).orElseThrow(NomeDeVisitanteNaoEncontradoException::new);
+        return VisitanteResponseDTO.fromVisitante(visitanteNome);
     }
 
     public List<VisitanteResponseDTO> pesquisarPeriodoDataEntrada(LocalDate inicio, LocalDate fim)

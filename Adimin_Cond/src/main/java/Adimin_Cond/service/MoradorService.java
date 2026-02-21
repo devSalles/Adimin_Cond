@@ -171,14 +171,5 @@ public class MoradorService {
     {
         return cpf.replaceAll("\\D","");
     }
-
-    private Morador buscarMorador(Long id) {
-        Morador morador = moradorRepository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Morador não encontrado"));
-
-        if (morador.getStatus() == StatusMorador.INATIVO) {
-            throw new MoradorInativoException();
-        }
-
-        return morador;
-    }
+    
 }

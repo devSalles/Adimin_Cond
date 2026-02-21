@@ -44,6 +44,20 @@ public class VisitanteController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/buscar-cpf/{cpf}")
+    public ResponseEntity<VisitanteResponseDTO> buscarCPF(@RequestParam String cpf)
+    {
+        VisitanteResponseDTO response = this.visitanteService.buscarPorCPF(cpf);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/buscar-nome/{nome}")
+    public ResponseEntity<VisitanteResponseDTO> buscarNome(@RequestParam String nome)
+    {
+        VisitanteResponseDTO response = this.visitanteService.buscarPorNome(nome);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/buscar/{id}")
     public ResponseEntity<VisitanteResponseDTO> buscarId(@PathVariable Long id)
     {
