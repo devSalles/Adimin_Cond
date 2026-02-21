@@ -5,7 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public record ApartamentoRequestDTO(
+public record ApartamentoUpdateRequestDTO(
+
         @NotNull(message = "Número obrigatório") @Positive(message = "Número inválido")
         Integer numero,
 
@@ -15,15 +16,11 @@ public record ApartamentoRequestDTO(
         @NotNull(message = "Andar obrigatório") @Positive(message = "Andar inválido")
         Integer andar,
 
-        String observacoes,
-
-        @NotNull(message = "ID de morador obrigatório")
-        Long idMorador
+        String observacoes
 ) {
-    public Apartamento toApartamento()
-    {
-        Apartamento apartamento = new Apartamento();
 
+    public Apartamento updateApartamento(Apartamento apartamento)
+    {
         apartamento.setNumero(this.numero);
         apartamento.setBloco(this.bloco);
         apartamento.setAndar(this.andar);

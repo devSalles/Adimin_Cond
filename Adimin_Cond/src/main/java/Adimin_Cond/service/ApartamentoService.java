@@ -10,7 +10,7 @@ import Adimin_Cond.core.exception.apartamento.MoradorJaVinculadoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
 import Adimin_Cond.dto.apartamento.ApartamentoRequestDTO;
 import Adimin_Cond.dto.apartamento.ApartamentoResponseDTO;
-import Adimin_Cond.dto.apartamento.VincularAptoResponseDTO;
+import Adimin_Cond.dto.apartamento.ApartamentoUpdateRequestDTO;
 import Adimin_Cond.entity.Apartamento;
 import Adimin_Cond.entity.Morador;
 import Adimin_Cond.repository.ApartamentoRepository;
@@ -30,15 +30,23 @@ public class ApartamentoService {
     @Transactional
     public ApartamentoResponseDTO salvar(ApartamentoRequestDTO dto)
     {
+        Morador morador = this.moradorRepository.findById(dto.idMorador()).orElseThrow(()->new IdNaoEncontradoException("ID de morador não encontrado"));
+
         Apartamento apartamento = dto.toApartamento();
-        apartamento.setStatusApartamento(StatusApartamento.DESOCUPADO);
+
+        //Realizar correção de validações
+        validarApartamento(apartamento);
+        validarMorador(morador);
+
+        apartamento.setMorador(morador);
+        apartamento.setStatusApartamento(StatusApartamento.OCUPADO);
 
         this.apartamentoRepository.save(apartamento);
         return ApartamentoResponseDTO.fromApartamento(apartamento);
     }
 
     @Transactional
-    public ApartamentoResponseDTO atualizarApartamento(Long id, ApartamentoRequestDTO dto)
+    public ApartamentoResponseDTO atualizarApartamento(Long id, ApartamentoUpdateRequestDTO dto)
     {
         Apartamento apto = buscarID(id);
 
@@ -46,26 +54,6 @@ public class ApartamentoService {
         this.apartamentoRepository.save(aptoAtualizado);
 
         return ApartamentoResponseDTO.fromApartamento(aptoAtualizado);
-    }
-
-    @Transactional
-    public VincularAptoResponseDTO vincularApartamento(Long IdApartamento, Long IdMorador)
-    {
-        Apartamento apto = buscarID(IdApartamento);
-        Morador morador = this.moradorRepository.findById(IdMorador).orElseThrow(()->new IdNaoEncontradoException("ID de morador não encontrado"));
-
-        //Validações para vínculo
-        validarApartamento(apto);
-        validarMorador(morador);
-
-        morador.setApartamento(apto);
-        apto.setMorador(morador);
-
-        apto.setStatusApartamento(StatusApartamento.OCUPADO);
-
-        this.apartamentoRepository.save(apto);
-
-        return VincularAptoResponseDTO.fromApartamento(apto);
     }
 
     @Transactional
