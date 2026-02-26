@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MoradorRepository extends JpaRepository<Morador,Long> {
@@ -19,9 +20,9 @@ public interface MoradorRepository extends JpaRepository<Morador,Long> {
 
     List<Morador> findByNome(String nome);
 
-    Morador findByCpf(String cpf);
+    Optional<Morador> findByCpf(String cpf);
 
-    Morador findByEmail(String cpf);
+    Optional<Morador> findByEmail(String cpf);
 
     List<Morador>findByStatus(StatusMorador statusMorador);
 }

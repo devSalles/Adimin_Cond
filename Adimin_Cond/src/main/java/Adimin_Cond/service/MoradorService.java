@@ -10,7 +10,6 @@ import Adimin_Cond.dto.morador.MoradorUpdateRequestDTO;
 import Adimin_Cond.entity.*;
 import Adimin_Cond.repository.*;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,26 +100,15 @@ public class MoradorService {
 
     public MoradorResponseDTO buscarCPFMorador(String cpf)
     {
-        String cpfLimpo = cpf.replaceAll("\\D","");
-        Morador morador = this.moradorRepository.findByCpf(cpfLimpo);
-
-        if(morador == null)
-        {
-            throw new NenhumCadastroException("CPF não encontrado");
-        }
+        String cpfLimpo = formatarCpf(cpf);
+        Morador morador = this.moradorRepository.findByCpf(cpfLimpo).orElseThrow(CpfNaoEncontradoException::new);
 
         return MoradorResponseDTO.fromMorador(morador);
     }
 
     public MoradorResponseDTO buscarEmailMorador(String email)
     {
-        Morador morador = this.moradorRepository.findByEmail(email);
-
-        if(morador == null)
-        {
-            throw new NenhumCadastroException("Email não encontrado");
-        }
-
+        Morador morador = this.moradorRepository.findByEmail(email).orElseThrow(EmailNaoEcontradoException::new);
         return MoradorResponseDTO.fromMorador(morador);
     }
 
