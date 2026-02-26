@@ -7,6 +7,7 @@ import Adimin_Cond.core.exception.apartamento.ManutencaoException;
 import Adimin_Cond.core.exception.apartamento.MoradorDesvinculadoException;
 import Adimin_Cond.core.exception.apartamento.MoradorJaVinculadoException;
 import Adimin_Cond.core.exception.morador.*;
+import Adimin_Cond.core.exception.taxa.ReferenciaRepetidaException;
 import Adimin_Cond.core.exception.taxa.TaxaJaPagaException;
 import Adimin_Cond.core.exception.veiculo.PlacaNaoEncontradaException;
 import Adimin_Cond.core.exception.veiculo.PlacaRepetidaException;
@@ -105,8 +106,8 @@ public class HandlerException {
     @ExceptionHandler(MoradorInativoException.class)
     public ResponseEntity<MessageRestError> MoradorInativoException(MoradorInativoException ex)
     {
-        MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
     @ExceptionHandler(TelefoneRepetidoException.class)
@@ -118,6 +119,19 @@ public class HandlerException {
 
     @ExceptionHandler(VisitaAtivaException.class)
     public ResponseEntity<MessageRestError> VisitaAtivaException(VisitaAtivaException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+    @ExceptionHandler(CpfNaoEncontradoException.class)
+    public ResponseEntity<MessageRestError> CpfNaoEncontradoException(CpfNaoEncontradoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(EmailNaoEcontradoException.class)
+    public ResponseEntity<MessageRestError> EmailNaoEcontradoException(EmailNaoEcontradoException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
@@ -207,8 +221,8 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 
-    @ExceptionHandler(ReflectiveOperationException.class)
-    public ResponseEntity<MessageRestError> ReflectiveOperationException(ReflectiveOperationException ex)
+    @ExceptionHandler(ReferenciaRepetidaException.class)
+    public ResponseEntity<MessageRestError> ReferenciaRepetidaException(ReferenciaRepetidaException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
