@@ -50,7 +50,10 @@ public class VisitanteService {
             throw new VisitaJaEmAndamentoException();
         }
 
+        String cpfFormatado = formatarCpf(visitaDTO.cpf());
+
         Visitante visitante = visitaDTO.toVisitante(morador);
+        visitante.setCpf(cpfFormatado);
         visitante.setStatusVisitante(StatusVisitante.EM_VISITA);
         visitante.setDataEntrada(LocalDateTime.now());
 
@@ -62,7 +65,9 @@ public class VisitanteService {
     @Transactional
     public VisitanteResponseDTO registrarSaida(VisitanteSaidaRequestDTO visitaDTO)
     {
-        Visitante visitante = this.visitanteRepository.findByCpfAndStatusVisitante(visitaDTO.cpf(),StatusVisitante.EM_VISITA)
+        String cpfFormatado = formatarCpf(visitaDTO.cpf());
+
+        Visitante visitante = this.visitanteRepository.findByCpfAndStatusVisitante(cpfFormatado,StatusVisitante.EM_VISITA)
                 .orElseThrow(() -> new AcessoRestritoException("Visitante sem visita ativa"));
 
         //Proteção de regra de negócio
@@ -100,7 +105,8 @@ public class VisitanteService {
 
     public VisitanteResponseDTO buscarPorCPF(String cpf)
     {
-        Visitante visitanteCPF = this.visitanteRepository.findByCpf(cpf).orElseThrow(VisitanteNaoEncontradoException::new);
+        String cpfFormatado = formatarCpf(cpf);
+        Visitante visitanteCPF = this.visitanteRepository.findByCpf(cpfFormatado).orElseThrow(VisitanteNaoEncontradoException::new);
         return VisitanteResponseDTO.fromVisitante(visitanteCPF);
     }
 
@@ -138,5 +144,10 @@ public class VisitanteService {
         List<Visitante> visitantes = this.visitanteRepository.findByDataSaidaBetween(inicioFormatado,finalFormatado);
 
         return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
+    }
+
+    public String formatarCpf(String cpf)
+    {
+        return cpf.replaceAll("\\D","");
     }
 }
