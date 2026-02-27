@@ -212,6 +212,21 @@ public class HandlerException {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.CONFLICT,ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
+
+    @ExceptionHandler(PeriodoNaoEncontradoException.class)
+    public ResponseEntity<MessageRestError> PeriodoNaoEncontradoException(PeriodoNaoEncontradoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
+    @ExceptionHandler(NenhumVisitanteComStatusException.class)
+    public ResponseEntity<MessageRestError> NenhumVisitanteComStatusException(NenhumVisitanteComStatusException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
     //------------ EXCEÇÕES DE TAXA CONDOMÍNIO ------------
 
     @ExceptionHandler(TaxaJaPagaException.class)
