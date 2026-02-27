@@ -34,7 +34,7 @@ public class MoradorController {
     }
 
     @GetMapping("/listar-todos")
-    public ResponseEntity<?> listarTodos()
+    public ResponseEntity<?> listarTodosMoradores()
     {
         return ResponseEntity.ok(this.moradorService.listarTodos());
     }

@@ -4,6 +4,8 @@ import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.Enum.StatusTaxa;
 import Adimin_Cond.core.exception.DataException;
 import Adimin_Cond.core.exception.IdNaoEncontradoException;
+import Adimin_Cond.core.exception.NenhumCadastroException;
+import Adimin_Cond.core.exception.PeriodoNaoEncontradoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
 import Adimin_Cond.core.exception.taxa.ReferenciaRepetidaException;
 import Adimin_Cond.core.exception.taxa.TaxaJaPagaException;
@@ -102,7 +104,7 @@ public class TaxaCondominioService {
 
         if(taxas.isEmpty())
         {
-            throw new IdNaoEncontradoException("Nenhum cadastro de taxas");
+            throw new NenhumCadastroException("Nenhum cadastro de taxas");
         }
 
         for(TaxaCondominio taxasAtrasadas : taxas)
@@ -124,7 +126,7 @@ public class TaxaCondominioService {
 
         if(taxas.isEmpty())
         {
-            throw new IdNaoEncontradoException("Nenhum cadastro de taxas nessa data");
+            throw new PeriodoNaoEncontradoException();
         }
 
         return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
@@ -141,7 +143,7 @@ public class TaxaCondominioService {
 
         if(taxas.isEmpty())
         {
-            throw new IdNaoEncontradoException("Nenhum cadastro de taxas nessa data");
+            throw new PeriodoNaoEncontradoException();
         }
 
         return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
