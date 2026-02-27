@@ -1,5 +1,6 @@
 package Adimin_Cond.controller;
 
+import Adimin_Cond.Enum.StatusVisitante;
 import Adimin_Cond.dto.visitante.VisitanteResponseDTO;
 import Adimin_Cond.dto.visitante.VisitanteSaidaRequestDTO;
 import Adimin_Cond.dto.visitante.VistanteEntradaRequestDTO;
@@ -52,9 +53,9 @@ public class VisitanteController {
     }
 
     @GetMapping("/buscar-nome/{nome}")
-    public ResponseEntity<VisitanteResponseDTO> buscarNome(@RequestParam String nome)
+    public ResponseEntity<List<VisitanteResponseDTO>> buscarNome(@RequestParam String nome)
     {
-        VisitanteResponseDTO response = this.visitanteService.buscarPorNome(nome);
+        List<VisitanteResponseDTO> response = this.visitanteService.buscarPorNome(nome);
         return ResponseEntity.ok(response);
     }
 
@@ -65,12 +66,20 @@ public class VisitanteController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/buscar-status/{statusVisitante}")
+    public ResponseEntity<List<VisitanteResponseDTO>> buscarPorStatus(@PathVariable StatusVisitante statusVisitante)
+    {
+        List<VisitanteResponseDTO>visitanteResponse = this.visitanteService.buscarPorStatus(statusVisitante);
+        return ResponseEntity.ok(visitanteResponse);
+    }
+
     @GetMapping("/pesquisar-por-data-entrada")
-    public ResponseEntity<?> buscarDataEntrada(
+    public ResponseEntity<List<VisitanteResponseDTO>> buscarDataEntrada(
             @RequestParam("inicio") @DateTimeFormat(iso =DateTimeFormat.ISO.DATE_TIME) LocalDate inicio,
             @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate fim )
     {
-        return ResponseEntity.ok(this.visitanteService.pesquisarPeriodoDataEntrada(inicio,fim));
+        List<VisitanteResponseDTO> visitanteResponse = this.visitanteService.pesquisarPeriodoDataEntrada(inicio,fim);
+        return ResponseEntity.ok(visitanteResponse);
     }
 
     @GetMapping("/pesquisar-por-data-saida")

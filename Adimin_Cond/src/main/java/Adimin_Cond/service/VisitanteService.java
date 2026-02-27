@@ -5,12 +5,10 @@ import Adimin_Cond.Enum.StatusVisitante;
 import Adimin_Cond.core.exception.DataException;
 import Adimin_Cond.core.exception.IdNaoEncontradoException;
 import Adimin_Cond.core.exception.NenhumCadastroException;
+import Adimin_Cond.core.exception.PeriodoNaoEncontradoException;
 import Adimin_Cond.core.exception.acesso.AcessoRestritoException;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
-import Adimin_Cond.core.exception.visitante.NomeDeVisitanteNaoEncontradoException;
-import Adimin_Cond.core.exception.visitante.VisitaJaEmAndamentoException;
-import Adimin_Cond.core.exception.visitante.VisitaJaFinalizadaException;
-import Adimin_Cond.core.exception.visitante.VisitanteNaoEncontradoException;
+import Adimin_Cond.core.exception.visitante.*;
 import Adimin_Cond.dto.visitante.VisitanteResponseDTO;
 import Adimin_Cond.dto.visitante.VisitanteSaidaRequestDTO;
 import Adimin_Cond.dto.visitante.VistanteEntradaRequestDTO;
@@ -18,6 +16,7 @@ import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.Visitante;
 import Adimin_Cond.repository.MoradorRepository;
 import Adimin_Cond.repository.VisitanteRepository;
+import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,10 +109,28 @@ public class VisitanteService {
         return VisitanteResponseDTO.fromVisitante(visitanteCPF);
     }
 
-    public VisitanteResponseDTO buscarPorNome(String nome)
+    public List<VisitanteResponseDTO> buscarPorNome(String nome)
     {
-        Visitante visitanteNome = this.visitanteRepository.findByNome(nome).orElseThrow(NomeDeVisitanteNaoEncontradoException::new);
-        return VisitanteResponseDTO.fromVisitante(visitanteNome);
+        List<Visitante> visitanteNome = this.visitanteRepository.findByNome(nome);
+
+        if(visitanteNome.isEmpty())
+        {
+            throw new NomeDeVisitanteNaoEncontradoException();
+        }
+
+        return visitanteNome.stream().map(VisitanteResponseDTO::fromVisitante).toList();
+    }
+
+    public List<VisitanteResponseDTO> buscarPorStatus(StatusVisitante statusVisitante)
+    {
+        List<Visitante> visitantes = this.visitanteRepository.findByStatusVisitante(statusVisitante);
+
+        if(visitantes.isEmpty())
+        {
+            throw new NenhumVisitanteComStatusException();
+        }
+
+        return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
     }
 
     public List<VisitanteResponseDTO> pesquisarPeriodoDataEntrada(LocalDate inicio, LocalDate fim)
@@ -127,6 +144,11 @@ public class VisitanteService {
         LocalDateTime finalFormatado = fim.atTime(LocalTime.MAX);
 
         List<Visitante> visitantes = this.visitanteRepository.findByDataEntradaBetween(inicioFormatado,finalFormatado);
+
+        if(visitantes.isEmpty())
+        {
+            throw new PeriodoNaoEncontradoException();
+        }
 
         return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
     }
@@ -143,9 +165,15 @@ public class VisitanteService {
 
         List<Visitante> visitantes = this.visitanteRepository.findByDataSaidaBetween(inicioFormatado,finalFormatado);
 
+        if(visitantes.isEmpty())
+        {
+            throw new PeriodoNaoEncontradoException();
+        }
+
         return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
     }
 
+    @PrePersist
     public String formatarCpf(String cpf)
     {
         return cpf.replaceAll("\\D","");

@@ -18,11 +18,13 @@ public interface VisitanteRepository extends JpaRepository<Visitante,Long> {
 
     Optional<Visitante> findByCpf(String cpf);
 
-    Optional<Visitante>findByNome(String nome);
+    List<Visitante>findByNome(String nome);
 
     List<Visitante> findByDataEntradaBetween(LocalDateTime inicio, LocalDateTime fim);
 
     List<Visitante> findByDataSaidaBetween(LocalDateTime inicio, LocalDateTime fim);
+
+    List<Visitante> findByStatusVisitante(StatusVisitante statusVisitante);
 
     boolean existsByMoradorIdAndStatusVisitante(Long idMorador, StatusVisitante statusVisitantes);
 }
