@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 public record AcessoSaidaRequestDTO(
 
-        @NotNull(message = "ID de veículo obrigatório")
-        Long veiculoId,
+        @NotNull(message = "Porteiro obrigatório")
+        String porteiro,
 
-        String porteiro
+        @NotNull(message = "ID de veículo obrigatório")
+        Long veiculoId
 ) {
 }

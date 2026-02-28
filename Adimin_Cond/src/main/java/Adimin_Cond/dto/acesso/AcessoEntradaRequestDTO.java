@@ -19,11 +19,7 @@ public record AcessoEntradaRequestDTO(
         Acesso acesso = new Acesso();
 
         acesso.setPorteiro(this.porteiro);
-
-        if(acesso.getVeiculo()==null)
-        {
-            acesso.setVeiculo(veiculo);
-        }
+        acesso.setVeiculo(veiculo);
 
         return acesso;
     }

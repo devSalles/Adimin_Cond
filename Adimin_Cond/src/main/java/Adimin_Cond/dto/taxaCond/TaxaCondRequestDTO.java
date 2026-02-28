@@ -14,7 +14,7 @@ public record TaxaCondRequestDTO(
         @NotNull(message = "Valor da taxa obrigatório") @PositiveOrZero(message = "Valor inválido")
         Double valor,
 
-//        @NotNull(message = "Data de vencimento obrigatória") @Future(message = "A data de vencimento deve ser posterior a data atual")
+        @NotNull(message = "Data de vencimento obrigatória") @Future(message = "A data de vencimento deve ser posterior a data atual")
         LocalDate dataVencimento,
 
         Long idMorador

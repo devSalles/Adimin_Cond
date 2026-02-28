@@ -56,7 +56,8 @@ public class VeiculoService {
 
     public VeiculoResponseDTO buscarPlaca(String placa)
     {
-        Veiculo veiculo = this.veiculoRepository.findByPlaca(placa);
+        String placaFormatada = limparPlaca(placa);
+        Veiculo veiculo = this.veiculoRepository.findByPlaca(placaFormatada);
 
         if(veiculo == null)
         {
