@@ -173,6 +173,9 @@ public class VisitanteService {
         return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
     }
 
+    //------------ METODOS AUXILIARES ------------
+
+
     @PrePersist
     public String formatarCpf(String cpf)
     {

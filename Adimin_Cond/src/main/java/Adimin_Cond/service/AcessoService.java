@@ -45,26 +45,26 @@ public class AcessoService {
             throw new MoradorInativoException("Morador está inativo");
         }
 
-        Acesso acessoAberto = this.acessoRepository.findByVeiculoAndDataHoraSaidaIsNull(veiculo);
-        if(acessoAberto!=null)
-        {
-            throw new AcessoRestritoException("Veículo possui entrada registrada sem saída");
-        }
-
         Acesso acesso = acessoDTO.toAcesso(veiculo);
         acesso.setDataHoraEntrada(LocalDateTime.now());
         acesso.setTipoAcesso(TipoAcesso.ENTRADA);
 
-        this.acessoRepository.save(acesso);
+        Acesso acessoExistente = this.acessoRepository.findTopByVeiculoOrderByDataHoraEntradaDesc(veiculo).orElse(acesso);
+        acessoExistente.setPorteiro(acesso.getPorteiro());
+        acessoExistente.setDataHoraEntrada(acesso.getDataHoraEntrada());
+        acessoExistente.setTipoAcesso(acesso.getTipoAcesso());
+        acessoExistente.setDataHoraSaida(null);
 
-        return AcessoResponseDTO.fromAcesso(acesso);
+
+        this.acessoRepository.save(acessoExistente);
+
+        return AcessoResponseDTO.fromAcesso(acessoExistente);
     }
 
     @Transactional
     public AcessoResponseDTO registrarSaida(AcessoSaidaRequestDTO acessoDTO)
     {
         Veiculo veiculo = this.veiculoRepository.findById(acessoDTO.veiculoId()).orElseThrow(()->new IdNaoEncontradoException("ID de veículo não encontrado"));
-
 
         Acesso acessoAberto = this.acessoRepository.findByVeiculoAndDataHoraSaidaIsNull(veiculo);
         if(acessoAberto==null)
