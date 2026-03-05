@@ -66,11 +66,8 @@ public class AcessoService {
     {
         Veiculo veiculo = this.veiculoRepository.findById(acessoDTO.veiculoId()).orElseThrow(()->new IdNaoEncontradoException("ID de veículo não encontrado"));
 
-        Acesso acessoAberto = this.acessoRepository.findByVeiculoAndDataHoraSaidaIsNull(veiculo);
-        if(acessoAberto==null)
-        {
-            throw new AcessoRestritoException("Não há registro de entrada para esse veículo");
-        }
+        Acesso acessoAberto = this.acessoRepository.findTopByVeiculoAndDataHoraSaidaIsNullOrderByDataHoraEntradaDesc(veiculo).
+                orElseThrow(()->new AcessoRestritoException("Não há registro de entrada para esse veículo"));
 
         acessoAberto.setTipoAcesso(TipoAcesso.SAIDA);
         acessoAberto.setDataHoraSaida(LocalDateTime.now());

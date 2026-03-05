@@ -10,13 +10,17 @@ import java.util.Optional;
 
 public interface AcessoRepository extends JpaRepository<Acesso,Long> {
 
-    Acesso findByVeiculoAndDataHoraSaidaIsNull(Veiculo veiculo);
-
+    //Pesquisar datas de entrada entre periodos
     List<Acesso> findByDataHoraEntradaBetween(LocalDateTime inicio, LocalDateTime fim);
 
+    //Pesquisar datas de saída entre periodos
     List<Acesso> findByDataHoraSaidaBetween(LocalDateTime inicio, LocalDateTime fim);
 
     List<Acesso> findByTipoAcesso(TipoAcesso tipoAcesso);
 
+    //Pesquisar veiculo e checar data e hora de entrada
     Optional<Acesso> findTopByVeiculoOrderByDataHoraEntradaDesc(Veiculo veiculo);
+
+    //Pesquisar veiculo e checar data e hora de saida e se a entrada não e nula
+    Optional<Acesso> findTopByVeiculoAndDataHoraSaidaIsNullOrderByDataHoraEntradaDesc(Veiculo veiculo);
 }
