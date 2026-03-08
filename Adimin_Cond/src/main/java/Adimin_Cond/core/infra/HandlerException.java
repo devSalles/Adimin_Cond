@@ -2,10 +2,7 @@ package Adimin_Cond.core.infra;
 
 import Adimin_Cond.core.exception.*;
 import Adimin_Cond.core.exception.acesso.AcessoRestritoException;
-import Adimin_Cond.core.exception.apartamento.AptoIndisponivelException;
-import Adimin_Cond.core.exception.apartamento.ManutencaoException;
-import Adimin_Cond.core.exception.apartamento.MoradorDesvinculadoException;
-import Adimin_Cond.core.exception.apartamento.MoradorJaVinculadoException;
+import Adimin_Cond.core.exception.apartamento.*;
 import Adimin_Cond.core.exception.morador.*;
 import Adimin_Cond.core.exception.taxa.ReferenciaRepetidaException;
 import Adimin_Cond.core.exception.taxa.TaxaJaPagaException;
@@ -26,12 +23,12 @@ import java.util.Map;
 public class HandlerException {
 
     //Exceção global
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<MessageRestError> excecoesGlobais()
-//    {
-//        MessageRestError messageRestError = new MessageRestError(HttpStatus.INTERNAL_SERVER_ERROR,"Erro interno, tente novamente mais tarde");
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageRestError);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<MessageRestError> excecoesGlobais()
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.INTERNAL_SERVER_ERROR,"Erro interno, tente novamente mais tarde");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageRestError);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MessageRestError> MethodArgumentNotValidException(MethodArgumentNotValidException ex)
@@ -87,6 +84,13 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(messageRestError);
     }
 
+    @ExceptionHandler(ApartamentoVinculadoException.class)
+    public ResponseEntity<MessageRestError> ApartamentoVinculadoException(ApartamentoVinculadoException ex)
+    {
+        MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
+    }
+
     //------------ EXCEÇÕES DE MORADOR ------------
 
     @ExceptionHandler(CpfRepetidoException.class)
@@ -130,8 +134,8 @@ public class HandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
     }
 
-    @ExceptionHandler(EmailNaoEcontradoException.class)
-    public ResponseEntity<MessageRestError> EmailNaoEcontradoException(EmailNaoEcontradoException ex)
+    @ExceptionHandler(EmailNaoEncontradoException.class)
+    public ResponseEntity<MessageRestError> EmailNaoEcontradoException(EmailNaoEncontradoException ex)
     {
         MessageRestError messageRestError = new MessageRestError(HttpStatus.BAD_REQUEST,ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageRestError);
