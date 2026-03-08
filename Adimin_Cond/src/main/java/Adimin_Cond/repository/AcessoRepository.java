@@ -23,4 +23,7 @@ public interface AcessoRepository extends JpaRepository<Acesso,Long> {
 
     //Pesquisar veiculo e checar data e hora de saida e se a entrada não e nula
     Optional<Acesso> findTopByVeiculoAndDataHoraSaidaIsNullOrderByDataHoraEntradaDesc(Veiculo veiculo);
+
+    //Pesquisar veiculo por ID
+    List<Acesso> findByVeiculoId(Long id);
 }

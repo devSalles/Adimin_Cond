@@ -49,16 +49,9 @@ public class AcessoService {
         acesso.setDataHoraEntrada(LocalDateTime.now());
         acesso.setTipoAcesso(TipoAcesso.ENTRADA);
 
-        Acesso acessoExistente = this.acessoRepository.findTopByVeiculoOrderByDataHoraEntradaDesc(veiculo).orElse(acesso);
-        acessoExistente.setPorteiro(acesso.getPorteiro());
-        acessoExistente.setDataHoraEntrada(acesso.getDataHoraEntrada());
-        acessoExistente.setTipoAcesso(acesso.getTipoAcesso());
-        acessoExistente.setDataHoraSaida(null);
+        this.acessoRepository.save(acesso);
 
-
-        this.acessoRepository.save(acessoExistente);
-
-        return AcessoResponseDTO.fromAcesso(acessoExistente);
+        return AcessoResponseDTO.fromAcesso(acesso);
     }
 
     @Transactional
@@ -146,6 +139,17 @@ public class AcessoService {
         if(acessos.isEmpty())
         {
             throw new NenhumCadastroException("Nenhum registro de acesso");
+        }
+
+        return acessos.stream().map(AcessoResponseDTO::fromAcesso).toList();
+    }
+
+    public List<AcessoResponseDTO> consultarPorVeiculo(Long id)
+    {
+        List<Acesso> acessos = this.acessoRepository.findByVeiculoId(id);
+        if(acessos.isEmpty())
+        {
+            throw new IdNaoEncontradoException("Id de veículo não encontrado");
         }
 
         return acessos.stream().map(AcessoResponseDTO::fromAcesso).toList();
