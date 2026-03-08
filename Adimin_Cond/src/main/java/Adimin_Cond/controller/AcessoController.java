@@ -8,6 +8,7 @@ import Adimin_Cond.service.AcessoService;
 import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/acesso")
 @Tag(name = "Acesso")
 public class AcessoController {
@@ -71,5 +73,12 @@ public class AcessoController {
     public ResponseEntity<?> consultarPorStatus(@RequestParam TipoAcesso tipoAcesso)
     {
         return ResponseEntity.ok(this.acessoService.consultarTiposAcessos(tipoAcesso));
+    }
+
+    @GetMapping("/consultar-id-veiculo/{idVeiculo}")
+    public ResponseEntity<List<AcessoResponseDTO>> consultarVeiculoID(@PathVariable Long idVeiculo)
+    {
+        List<AcessoResponseDTO>acessoResponseDTOList = this.acessoService.consultarPorVeiculo(idVeiculo);
+        return ResponseEntity.ok(acessoResponseDTOList);
     }
 }

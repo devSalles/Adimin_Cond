@@ -39,9 +39,9 @@ public class VisitanteController {
     }
 
     @GetMapping("/listar-registros")
-    public ResponseEntity<List<VisitanteResponseDTO>> listarTodos()
+    public ResponseEntity<List<VisitanteResponseDTO>> listarTodosRegistros()
     {
-        List<VisitanteResponseDTO> responseDTO = this.visitanteService.listarTodas();
+        List<VisitanteResponseDTO> responseDTO = this.visitanteService.listarTodosVisitantes();
         return ResponseEntity.ok(responseDTO);
     }
 

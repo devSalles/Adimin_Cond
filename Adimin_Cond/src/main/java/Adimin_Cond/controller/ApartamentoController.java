@@ -60,7 +60,7 @@ public class ApartamentoController {
     }
 
     @GetMapping("/buscar-id/{id}")
-    public ResponseEntity<?> buscarID(@PathVariable Long id)
+    public ResponseEntity<?> buscarIDApto(@PathVariable Long id)
     {
         return ResponseEntity.ok(this.apartamentoService.buscarID(id));
     }
