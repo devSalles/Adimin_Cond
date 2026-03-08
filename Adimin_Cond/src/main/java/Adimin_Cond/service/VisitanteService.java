@@ -16,7 +16,6 @@ import Adimin_Cond.entity.Morador;
 import Adimin_Cond.entity.Visitante;
 import Adimin_Cond.repository.MoradorRepository;
 import Adimin_Cond.repository.VisitanteRepository;
-import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +35,8 @@ public class VisitanteService {
     @Transactional
     public VisitanteResponseDTO registrarVisita(VistanteEntradaRequestDTO visitaDTO)
     {
+        String cpfFormatado = formatarCpf(visitaDTO.cpf());
+
         Morador morador = this.moradorRepository.findById(visitaDTO.idMorador()).orElseThrow(()->new IdNaoEncontradoException("ID de morador não encontrado"));
 
         if(morador.getStatus() == StatusMorador.INATIVO)
@@ -43,13 +44,12 @@ public class VisitanteService {
             throw new MoradorInativoException("Morador está inativo e não pode receber visita");
         }
 
-        boolean visitaAtiva = this.visitanteRepository.existsByCpfAndStatusVisitante(visitaDTO.cpf(),StatusVisitante.EM_VISITA);
+        boolean visitaAtiva = this.visitanteRepository.existsByCpfAndStatusVisitante(cpfFormatado,StatusVisitante.EM_VISITA);
         if(visitaAtiva)
         {
             throw new VisitaJaEmAndamentoException();
         }
 
-        String cpfFormatado = formatarCpf(visitaDTO.cpf());
 
         Visitante visitante = visitaDTO.toVisitante(morador);
         visitante.setCpf(cpfFormatado);
@@ -84,13 +84,13 @@ public class VisitanteService {
         return VisitanteResponseDTO.fromVisitante(visitante);
     }
 
-    public List<VisitanteResponseDTO> listarTodas()
+    public List<VisitanteResponseDTO> listarTodosVisitantes()
     {
         List<Visitante> visitantes = this.visitanteRepository.findAll();
 
         if(visitantes.isEmpty())
         {
-            throw new NenhumCadastroException("Nnenhuma visita registrada");
+            throw new NenhumCadastroException("Nenhuma visita registrada");
         }
 
         return visitantes.stream().map(VisitanteResponseDTO::fromVisitante).toList();
@@ -137,7 +137,7 @@ public class VisitanteService {
     {
         if(fim.isBefore(inicio))
         {
-            throw new DataException("Data futura não pode ser maior que data pasada");
+            throw new DataException("Data futura não pode ser maior que data passada");
         }
 
         LocalDateTime inicioFormatado = inicio.atStartOfDay();
@@ -157,7 +157,7 @@ public class VisitanteService {
     {
         if(fim.isBefore(inicio))
         {
-            throw new DataException("Data futura não pode ser maior que data pasada");
+            throw new DataException("Data futura não pode ser maior que data passada");
         }
 
         LocalDateTime inicioFormatado = inicio.atStartOfDay();
@@ -175,9 +175,7 @@ public class VisitanteService {
 
     //------------ METODOS AUXILIARES ------------
 
-
-    @PrePersist
-    public String formatarCpf(String cpf)
+    private String formatarCpf(String cpf)
     {
         return cpf.replaceAll("\\D","");
     }

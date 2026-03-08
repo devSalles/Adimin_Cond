@@ -1,8 +1,11 @@
 package Adimin_Cond.service;
 
+import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.Enum.StatusVeiculo;
 import Adimin_Cond.core.exception.IdNaoEncontradoException;
 import Adimin_Cond.core.exception.NenhumCadastroException;
+import Adimin_Cond.core.exception.morador.MoradorInativoException;
+import Adimin_Cond.core.exception.veiculo.PlacaNaoEncontradaException;
 import Adimin_Cond.core.exception.veiculo.PlacaRepetidaException;
 import Adimin_Cond.core.exception.veiculo.VeiculoInativoException;
 import Adimin_Cond.dto.veiculo.VeiculoRequestDTO;
@@ -28,15 +31,22 @@ public class VeiculoService {
     @Transactional
     public VeiculoResponseDTO salvarVeiculo(VeiculoRequestDTO veiculoDTO)
     {
-        Morador morador = this.moradorRepository.findById(veiculoDTO.idMorador()).orElseThrow(()->new IdNaoEncontradoException("ID de Morador não encontrado"));;
-        Veiculo veiculo = veiculoDTO.toVeiculo(morador);
+        String placaFormatada = veiculoDTO.placa();
 
-        if(this.veiculoRepository.existsByPlaca(veiculoDTO.placa()))
+        Morador morador = this.moradorRepository.findById(veiculoDTO.idMorador()).orElseThrow(()->new IdNaoEncontradoException("ID de Morador não encontrado"));;
+
+        Veiculo veiculo = veiculoDTO.toVeiculo(morador);
+        if(this.veiculoRepository.existsByPlaca(placaFormatada))
         {
             throw new PlacaRepetidaException("Placa já está cadastrada");
         }
 
-        veiculo.setPlaca(limparPlaca(veiculoDTO.placa()));
+        if(morador.getStatus() == StatusMorador.INATIVO)
+        {
+            throw new MoradorInativoException("Morador com status inativo não pode cadastrar veículo");
+        }
+
+        veiculo.setPlaca(placaFormatada);
         veiculo.setStatus(StatusVeiculo.ATIVO);
         this.veiculoRepository.save(veiculo);
 
@@ -61,7 +71,7 @@ public class VeiculoService {
 
         if(veiculo == null)
         {
-            throw new PlacaRepetidaException("Placa não encontrada");
+            throw new PlacaNaoEncontradaException("Placa não encontrada");
         }
 
         return VeiculoResponseDTO.fromVeiculo(veiculo);
@@ -116,7 +126,7 @@ public class VeiculoService {
 
     //------------ METODOS AUXILIARES ------------
 
-    public String limparPlaca(String placa)
+    private String limparPlaca(String placa)
     {
         return placa.replaceAll("[^A-Za-z0-9]","").toUpperCase();
     }

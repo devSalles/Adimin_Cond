@@ -3,10 +3,7 @@ package Adimin_Cond.service;
 import Adimin_Cond.Enum.StatusApartamento;
 import Adimin_Cond.Enum.StatusMorador;
 import Adimin_Cond.core.exception.*;
-import Adimin_Cond.core.exception.apartamento.AptoIndisponivelException;
-import Adimin_Cond.core.exception.apartamento.ManutencaoException;
-import Adimin_Cond.core.exception.apartamento.MoradorDesvinculadoException;
-import Adimin_Cond.core.exception.apartamento.MoradorJaVinculadoException;
+import Adimin_Cond.core.exception.apartamento.*;
 import Adimin_Cond.core.exception.morador.MoradorInativoException;
 import Adimin_Cond.dto.apartamento.ApartamentoRequestDTO;
 import Adimin_Cond.dto.apartamento.ApartamentoResponseDTO;
@@ -61,8 +58,9 @@ public class ApartamentoService {
         morador.setApartamento(apto);
 
         apto.setStatusApartamento(StatusApartamento.OCUPADO);
-        this.apartamentoRepository.save(apto);
 
+        this.apartamentoRepository.save(apto);
+        this.moradorRepository.save(morador);
 
         return VincularAptoResponseDTO.fromApartamento(apto);
     }
@@ -100,6 +98,11 @@ public class ApartamentoService {
             throw new ManutencaoException("O apartamento já está em manutenção");
         }
 
+        if(apto.getStatusApartamento() == StatusApartamento.OCUPADO)
+        {
+            throw new ManutencaoException("Apartamento ocupado não pode entrar em manutenção");
+        }
+
         apto.setStatusApartamento(StatusApartamento.MANUTENCAO);
         this.apartamentoRepository.save(apto);
 
@@ -128,7 +131,7 @@ public class ApartamentoService {
 
         if(apartamentos.isEmpty())
         {
-            throw new NenhumCadastroException("Nnehum cadastro no banco de dados");
+            throw new NenhumCadastroException("Nenhum cadastro de apartamento no banco de dados");
         }
 
         return apartamentos.stream().map(ApartamentoResponseDTO::fromApartamento).toList();
@@ -168,25 +171,38 @@ public class ApartamentoService {
             throw new AptoIndisponivelException("Apartamento já esta inativo");
         }
 
+        if(apto.getStatusApartamento() == StatusApartamento.OCUPADO)
+        {
+            throw new ApartamentoVinculadoException();
+        }
+
+        if(apto.getMorador() != null)
+        {
+            Morador morador = apto.getMorador();
+            apto.setStatusApartamento(StatusApartamento.INATIVO);
+            apto.setMorador(null);
+            morador.setApartamento(null);
+
+            this.apartamentoRepository.save(apto);
+        }
+
         apto.setStatusApartamento(StatusApartamento.INATIVO);
-        apto.setMorador(null);
         this.apartamentoRepository.save(apto);
 
         return ApartamentoResponseDTO.fromApartamento(apto);
     }
-
-    //--------------------- METODOS AUXILIARES ---------------------
 
     public Apartamento buscarID(Long id)
     {
         return this.apartamentoRepository.findById(id).orElseThrow(()->new IdNaoEncontradoException("ID de apartamento não encontrado"));
     }
 
-    public void validarApartamento(Apartamento apartamento)
+    //--------------------- METODOS AUXILIARES ---------------------
+
+    private void validarApartamento(Apartamento apartamento)
     {
         if(apartamento.getStatusApartamento() == StatusApartamento.INATIVO ||
-           apartamento.getStatusApartamento() == StatusApartamento.MANUTENCAO ||
-           apartamento.getStatusApartamento() == StatusApartamento.OCUPADO)
+           apartamento.getStatusApartamento() == StatusApartamento.MANUTENCAO)
         {
             throw new AptoIndisponivelException("Apartamento indisponível para vínculo");
         }
@@ -198,7 +214,7 @@ public class ApartamentoService {
 
     }
 
-    public void validarMorador(Morador morador)
+    private void validarMorador(Morador morador)
     {
         if(morador.getStatus() == StatusMorador.INATIVO)
         {
