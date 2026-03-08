@@ -9,7 +9,6 @@ import Adimin_Cond.dto.morador.MoradorResponseDTO;
 import Adimin_Cond.dto.morador.MoradorUpdateRequestDTO;
 import Adimin_Cond.entity.*;
 import Adimin_Cond.repository.*;
-import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +25,14 @@ public class MoradorService {
     @Transactional
     public MoradorResponseDTO salvar(MoradorRequestDTO dto)
     {
+        String cpfFormatado = formatarCpf(dto.cpf());
+
         if(this.moradorRepository.existsByEmail(dto.email()))
         {
             throw new EmailRepetidoException();
         }
 
-        if(this.moradorRepository.existsByCpf(dto.cpf()))
+        if(this.moradorRepository.existsByCpf(cpfFormatado))
         {
             throw new CpfRepetidoException();
         }
@@ -41,7 +42,6 @@ public class MoradorService {
             throw new TelefoneRepetidoException();
         }
 
-        String cpfFormatado = formatarCpf(dto.cpf());
 
         Morador morador = dto.toMorador();
         morador.setStatus(StatusMorador.ATIVO);
@@ -63,7 +63,7 @@ public class MoradorService {
             throw new MoradorInativoException("Morador está com status inativo");
         }
 
-        if(this.moradorRepository.existsByEmail(dto.email()))
+        if(this.moradorRepository.existsByEmailAndIdNot(dto.email(),id))
         {
             throw new EmailRepetidoException();
         }
@@ -90,7 +90,7 @@ public class MoradorService {
     {
         List<Morador> morador = this.moradorRepository.findByNome(nome);
 
-        if(morador == null)
+        if(morador.isEmpty())
         {
             throw new NenhumCadastroException("Nome não encontrado");
         }
@@ -108,7 +108,7 @@ public class MoradorService {
 
     public MoradorResponseDTO buscarEmailMorador(String email)
     {
-        Morador morador = this.moradorRepository.findByEmail(email).orElseThrow(EmailNaoEcontradoException::new);
+        Morador morador = this.moradorRepository.findByEmail(email).orElseThrow(EmailNaoEncontradoException::new);
         return MoradorResponseDTO.fromMorador(morador);
     }
 
@@ -154,7 +154,6 @@ public class MoradorService {
 
     //--------------------- METODOS AUXILIARES ---------------------
 
-    @PrePersist
     private String formatarCpf(String cpf)
     {
         return cpf.replaceAll("\\D","");

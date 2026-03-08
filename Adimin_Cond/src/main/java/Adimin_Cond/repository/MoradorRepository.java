@@ -25,4 +25,6 @@ public interface MoradorRepository extends JpaRepository<Morador,Long> {
     Optional<Morador> findByEmail(String cpf);
 
     List<Morador>findByStatus(StatusMorador statusMorador);
+
+    Boolean existsByEmailAndIdNot(String email, Long id);
 }

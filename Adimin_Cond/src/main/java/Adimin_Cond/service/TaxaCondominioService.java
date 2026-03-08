@@ -66,9 +66,15 @@ public class TaxaCondominioService {
 
         if(taxa.getDataPagamento().isAfter(taxa.getDataVencimento()))
         {
+            //Realiza o calculo da taxa
             final Double multa = 0.08;
-            double valorFinalTaxa = taxa.getValor() * (1 + multa);
-            taxa.setValor(valorFinalTaxa);
+            double valorFinalTaxa = taxa.getValor() * multa;
+
+            //Valor da multa
+            taxa.setMulta(valorFinalTaxa);
+
+            //Valor final da taxa com multa aplicada
+            taxa.setValor(taxa.getValor()+valorFinalTaxa);
         }
         else
         {
@@ -86,12 +92,13 @@ public class TaxaCondominioService {
         if(taxa.getStatus() == StatusTaxa.PENDENTE && taxa.getDataVencimento().isBefore(LocalDate.now()))
         {
             taxa.setStatus(StatusTaxa.ATRASADA);
+            this.taxaCondominioRepository.save(taxa);
         }
     }
 
     public TaxaCondResponseDTO buscarID(Long id)
     {
-        TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa no encontrada"));
+        TaxaCondominio taxa = this.taxaCondominioRepository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("Taxa não encontrada"));
 
         atualizarStatusAtrasado(taxa);
 
@@ -107,10 +114,7 @@ public class TaxaCondominioService {
             throw new NenhumCadastroException("Nenhum cadastro de taxas");
         }
 
-        for(TaxaCondominio taxasAtrasadas : taxas)
-        {
-            atualizarStatusAtrasado(taxasAtrasadas);
-        }
+        taxas.forEach(this::atualizarStatusAtrasado);
 
         return taxas.stream().map(TaxaCondResponseDTO::fromTaxaCond).toList();
     }
@@ -119,7 +123,7 @@ public class TaxaCondominioService {
     {
         if(fim.isBefore(incio))
         {
-            throw new DataException("Data futura não pode ser maior que data passada");
+            throw new DataException("Data passada não pode ser maior que data futura");
         }
 
         List<TaxaCondominio> taxas = this.taxaCondominioRepository.findByDataPagamentoBetween(incio,fim);
@@ -136,7 +140,7 @@ public class TaxaCondominioService {
     {
         if(fim.isBefore(incio))
         {
-            throw new DataException("Data futura não pode ser maior que data passada");
+            throw new DataException("Data passada não pode ser maior que data futura");
         }
 
         List<TaxaCondominio> taxas = this.taxaCondominioRepository.findByDataVencimentoBetween(incio,fim);
