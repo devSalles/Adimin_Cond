@@ -96,7 +96,7 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
   "cor": "Prata",
   "idMorador": 1
 }
-
+```
 ### 🚶 Visitante — `/visitante`
 
 | Método | Rota | Descrição |
