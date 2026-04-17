@@ -111,7 +111,23 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
 | `GET` | `/visitante/pesquisar-por-data-entrada` | Filtra visitas por período de entrada (`?inicio=&fim=`) |
 | `GET` | `/visitante/pesquisar-por-data-saida` | Filtra visitas por período de saída (`?inicio=&fim=`) |
 
----
+#### Exemplo de requisição — `POST /visitante/entrada`
+
+```json
+{
+  "nome": "Ana Beatriz Souza",
+  "cpf": "11144477735",
+  "idMorador": 1
+}
+```
+
+#### Exemplo de requisição — `POST /visitante/saida`
+
+```json
+{
+  "cpf": "11144477735"
+}
+```
 
 ### 💰 Taxa de Condomínio — `/taxas`
 
@@ -124,7 +140,16 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
 | `GET` | `/taxas/data-pagamento` | Filtra taxas por período de pagamento (`?inicio=&fim=`) |
 | `GET` | `/taxas/data-vencimento` | Filtra taxas por período de vencimento (`?inicio=&fim=`) |
 
----
+#### Exemplo de requisição — `POST /taxas/adicionar-taxa`
+
+```json
+{
+  "referencia": "Abril/2026",
+  "valor": 350.75,
+  "dataVencimento": "2027-10-17",
+  "idMorador": 1
+}
+```
 
 ### 🔑 Acesso — `/acesso`
 
