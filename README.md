@@ -164,6 +164,23 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
 | `GET` | `/acesso/consultar-por-status` | Filtra acessos por tipo (`?tipoAcesso=`) |
 | `GET` | `/acesso/consultar-id-veiculo/{idVeiculo}` | Lista acessos de um veículo específico |
 
+#### Exemplo de requisição — `POST /acesso/entrada`
+
+```json
+{
+  "porteiro": "Pedro",
+  "veiculo": 1
+}
+```
+
+#### Exemplo de requisição — `POST /acesso/saida`
+
+```json
+{
+  "porteiro": "Pedro",
+  "veiculoId": 1
+}
+```
 ---
 
 ## 📐 Regras de Negócio
@@ -277,9 +294,12 @@ http://localhost:8080/swagger-ui.html
 git clone https://github.com/seu-usuario/seu-repositorio.git
 
 # Configure o banco de dados em application.properties
-spring.datasource.url=jdbc:mysql://localhost:3306/condominio
+spring.datasource.url=jdbc:mysql://localhost:3306/Admin_cond
 spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
+spring.datasource.password=sua-senha
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.show-sql=true
 
 # Execute a aplicação
 ./mvnw spring-boot:run
@@ -295,11 +315,26 @@ src/
 │   ├── java/
 │   │   └── com/condominio/
 │   │       ├── controller/
-│   │       ├── service/
-│   │       ├── repository/
-│   │       ├── model/
+│   │       ├── core/
+│   │           └── /excpetion
+│   │                └──/acesso
+│   │                    /apartamento
+│   │                    /morador
+│   │                    /taxa
+│   │                    /veiculo
+│   │                    /visitante
+│   │                 /infra
 │   │       ├── dto/
-│   │       └── exception/
+│   │           └── /acesso
+│   │               /apartamento
+│   │               /morador
+│   │               /taxaCond
+│   │               /veiculo
+│   │               /visitante
+│   │       ├── entity/
+│   │       ├── Enum/
+│   │       ├── repository/
+│   │       └── service/
 │   └── resources/
 │       └── application.properties
 ```
