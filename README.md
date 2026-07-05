@@ -316,21 +316,21 @@ src/
 │   │   └── com/condominio/
 │   │       ├── controller/
 │   │       ├── core/
-│   │           └── /excpetion
-│   │                └──/acesso
-│   │                    /apartamento
-│   │                    /morador
-│   │                    /taxa
-│   │                    /veiculo
-│   │                    /visitante
-│   │                 /infra
+│   │       │    └── /excpetion
+│   │       │         └──/acesso
+│   │       │             /apartamento
+│   │       │             /morador
+│   │       │             /taxa
+│   │       │             /veiculo
+│   │       │             /visitante
+│   │       │          /infra
 │   │       ├── dto/
-│   │           └── /acesso
-│   │               /apartamento
-│   │               /morador
-│   │               /taxaCond
-│   │               /veiculo
-│   │               /visitante
+│   │       │    └── /acesso
+│   │       │        /apartamento
+│   │       │        /morador
+│   │       │         /taxaCond
+│   │       │        /veiculo
+│   │       │        /visitante
 │   │       ├── entity/
 │   │       ├── Enum/
 │   │       ├── repository/
