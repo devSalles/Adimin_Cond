@@ -1,11 +1,20 @@
 # 🏢 Sistema de Gerenciamento de Condomínio
+🛠️ Tecnologias Utilizadas:
 
-![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?style=flat-square)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=flat-square)
-![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203.0-85EA2D?style=flat-square)
 
-API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos, veículos, visitantes e taxas de condomínio, com regras de negócio robustas e exclusão lógica em todas as entidades.
+![Java](https://img.shields.io/badge/Java-17+-orange?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?style=flat-square&logo=springboot&logoColor=white)
+![Spring Web](https://img.shields.io/badge/Spring%20Web-3.x-brightgreen?style=flat-square&logo=spring&logoColor=white)
+![Spring Data JPA](https://img.shields.io/badge/Spring%20Data%20JPA-3.x-brightgreen?style=flat-square&logo=spring&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=flat-square&logo=mysql&logoColor=white)
+![Jakarta Validation](https://img.shields.io/badge/Jakarta%20Validation-3.x-orange?style=flat-square)
+![Lombok](https://img.shields.io/badge/Lombok-1.18.x-red?style=flat-square)
+![Swagger](https://img.shields.io/badge/Swagger-OpenAPI%203.0-85EA2D?style=flat-square&logo=swagger&logoColor=black)
+![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?style=flat-square&logo=apachemaven&logoColor=white)
+
+API REST desenvolvida com **Java e Spring Boot** para gerenciamento de moradores, apartamentos, veículos, visitantes e taxas de condomínio.
+
+O sistema aplica **regras de negócio**, **validações**, **controle transacional**, **integridade dos dados** e **exclusão lógica (soft delete)** nas entidades que possuem operações de desativação.
 
 ---
 
@@ -13,11 +22,15 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
 
 | Tecnologia | Descrição |
 |---|---|
+| **Java** | Linguagem utilizada no desenvolvimento da aplicação |
 | **Spring Boot** | Framework principal para construção da API REST |
+| **Spring Web** | Desenvolvimento dos endpoints REST |
+| **Spring Data JPA** | Abstração de acesso e persistência de dados |
+| **Jakarta Bean Validation** | Validação declarativa dos dados de entrada |
 | **MySQL** | Banco de dados relacional para persistência |
+| **Lombok** | Redução de código boilerplate |
 | **Swagger / OpenAPI 3.0** | Documentação interativa da API |
-| **Spring Data JPA** | Abstração de acesso a dados |
-| **Bean Validation** | Validação declarativa de campos obrigatórios |
+| **Maven** | Gerenciamento de dependências e automação do build |
 
 ---
 
