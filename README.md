@@ -21,6 +21,110 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
 
 ---
 
+## 📐 Regras de Negócio
+
+### 🧑‍💼 Morador
+
+- Deve possuir nome, CPF válido, telefone e e-mail.
+- **CPF e e-mail são únicos** no sistema.
+- Status possíveis: `ATIVO` | `INATIVO`
+- Vinculado a **no máximo um** apartamento.
+- Pode possuir vários veículos, visitantes e taxas.
+- Morador `INATIVO`:
+  - Não pode receber novas taxas.
+  - Não pode cadastrar veículos.
+  - Não pode registrar visitantes.
+- Só pode ser inativado se **não houver visitas em andamento**.
+
+---
+
+### 🏢 Apartamento
+
+- Deve possuir número, bloco e andar.
+- Status possíveis: `OCUPADO` | `DESOCUPADO` | `MANUTENCAO`
+- Aceita **no máximo um morador**.
+- Regras por status:
+  - `DESOCUPADO`: não pode possuir morador vinculado.
+  - `OCUPADO`: deve obrigatoriamente possuir um morador.
+  - `MANUTENCAO`: não pode receber novo morador.
+- Um morador **não pode ocupar mais de um apartamento** simultaneamente.
+- O status é **atualizado automaticamente** ao vincular ou remover morador.
+
+---
+
+### 🚗 Veículo
+
+- Deve possuir **placa válida e única**, modelo e cor.
+- A placa é **armazenada sem formatação**.
+- Status possíveis: `ATIVO` | `INATIVO`
+- Deve estar vinculado a um morador `ATIVO`.
+- Veículo `INATIVO`:
+  - Não pode ser utilizado no controle de acesso.
+  - Não pode participar de novas operações.
+
+---
+
+### 🚶 Visitante
+
+- Deve possuir nome e documento.
+- Deve estar vinculado a um morador `ATIVO`.
+- A visita contém data/hora de entrada obrigatória.
+- A data/hora de saída **não pode ser anterior** à de entrada.
+- Um visitante **não pode ter mais de uma visita ativa** simultaneamente.
+- A visita só é considerada finalizada após o registro da saída.
+- Não é permitido finalizar uma visita **já encerrada**.
+
+---
+
+### 💰 Taxa de Condomínio
+
+- Deve possuir referência (mês/ano), valor e data de vencimento.
+- Status possíveis: `PENDENTE` | `PAGA` | `ATRASADA`
+- Só pode ser gerada para morador `ATIVO`.
+- **Não pode existir mais de uma taxa** com a mesma referência para o mesmo morador.
+- Toda taxa inicia com status `PENDENTE`.
+- Ao ultrapassar o vencimento sem pagamento → status muda automaticamente para `ATRASADA`.
+- Taxa `PAGA`:
+  - Não pode ser alterada.
+  - Não pode ser excluída logicamente.
+  - Não é permitido registrar pagamento novamente.
+
+---
+
+## ⚙️ Regras Gerais
+
+- Nenhum campo obrigatório pode ser **nulo ou vazio**.
+- Todas as exclusões utilizam **exclusão lógica** (soft delete) — nenhum registro é deletado fisicamente.
+- Todas as operações críticas são **transacionais**.
+- Erros retornam mensagens claras, por exemplo:
+  - `"Morador inativo"`
+  - `"Apartamento em manutenção"`
+  - `"Taxa duplicada para o mesmo período"`
+
+---
+
+## 🔄 Atualizações Automáticas
+
+| Evento | Ação automática |
+|---|---|
+| Morador vinculado a apartamento | Status do apartamento → `OCUPADO` |
+| Morador removido do apartamento | Status do apartamento → `DESOCUPADO` |
+| Taxa vence sem pagamento | Status da taxa → `ATRASADA` |
+| Pagamento registrado | Status da taxa → `PAGA` |
+| Saída do visitante registrada | Visita marcada como finalizada |
+
+---
+
+## 📄 Documentação da API
+
+Após subir a aplicação, acesse a documentação interativa via Swagger:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+---
+
 ## 📡 Endpoints da API
 
 ### 🧑‍💼 Morador — `/morador`
@@ -183,110 +287,6 @@ API REST desenvolvida com **Spring Boot** para gerenciar moradores, apartamentos
 ```
 ---
 
-## 📐 Regras de Negócio
-
-### 🧑‍💼 Morador
-
-- Deve possuir nome, CPF válido, telefone e e-mail.
-- **CPF e e-mail são únicos** no sistema.
-- Status possíveis: `ATIVO` | `INATIVO`
-- Vinculado a **no máximo um** apartamento.
-- Pode possuir vários veículos, visitantes e taxas.
-- Morador `INATIVO`:
-  - Não pode receber novas taxas.
-  - Não pode cadastrar veículos.
-  - Não pode registrar visitantes.
-- Só pode ser inativado se **não houver visitas em andamento**.
-
----
-
-### 🏢 Apartamento
-
-- Deve possuir número, bloco e andar.
-- Status possíveis: `OCUPADO` | `DESOCUPADO` | `MANUTENCAO`
-- Aceita **no máximo um morador**.
-- Regras por status:
-  - `DESOCUPADO`: não pode possuir morador vinculado.
-  - `OCUPADO`: deve obrigatoriamente possuir um morador.
-  - `MANUTENCAO`: não pode receber novo morador.
-- Um morador **não pode ocupar mais de um apartamento** simultaneamente.
-- O status é **atualizado automaticamente** ao vincular ou remover morador.
-
----
-
-### 🚗 Veículo
-
-- Deve possuir **placa válida e única**, modelo e cor.
-- A placa é **armazenada sem formatação**.
-- Status possíveis: `ATIVO` | `INATIVO`
-- Deve estar vinculado a um morador `ATIVO`.
-- Veículo `INATIVO`:
-  - Não pode ser utilizado no controle de acesso.
-  - Não pode participar de novas operações.
-
----
-
-### 🚶 Visitante
-
-- Deve possuir nome e documento.
-- Deve estar vinculado a um morador `ATIVO`.
-- A visita contém data/hora de entrada obrigatória.
-- A data/hora de saída **não pode ser anterior** à de entrada.
-- Um visitante **não pode ter mais de uma visita ativa** simultaneamente.
-- A visita só é considerada finalizada após o registro da saída.
-- Não é permitido finalizar uma visita **já encerrada**.
-
----
-
-### 💰 Taxa de Condomínio
-
-- Deve possuir referência (mês/ano), valor e data de vencimento.
-- Status possíveis: `PENDENTE` | `PAGA` | `ATRASADA`
-- Só pode ser gerada para morador `ATIVO`.
-- **Não pode existir mais de uma taxa** com a mesma referência para o mesmo morador.
-- Toda taxa inicia com status `PENDENTE`.
-- Ao ultrapassar o vencimento sem pagamento → status muda automaticamente para `ATRASADA`.
-- Taxa `PAGA`:
-  - Não pode ser alterada.
-  - Não pode ser excluída logicamente.
-  - Não é permitido registrar pagamento novamente.
-
----
-
-## ⚙️ Regras Gerais
-
-- Nenhum campo obrigatório pode ser **nulo ou vazio**.
-- Todas as exclusões utilizam **exclusão lógica** (soft delete) — nenhum registro é deletado fisicamente.
-- Todas as operações críticas são **transacionais**.
-- Erros retornam mensagens claras, por exemplo:
-  - `"Morador inativo"`
-  - `"Apartamento em manutenção"`
-  - `"Taxa duplicada para o mesmo período"`
-
----
-
-## 🔄 Atualizações Automáticas
-
-| Evento | Ação automática |
-|---|---|
-| Morador vinculado a apartamento | Status do apartamento → `OCUPADO` |
-| Morador removido do apartamento | Status do apartamento → `DESOCUPADO` |
-| Taxa vence sem pagamento | Status da taxa → `ATRASADA` |
-| Pagamento registrado | Status da taxa → `PAGA` |
-| Saída do visitante registrada | Visita marcada como finalizada |
-
----
-
-## 📄 Documentação da API
-
-Após subir a aplicação, acesse a documentação interativa via Swagger:
-
-```
-http://localhost:8080/swagger-ui.html
-```
-
----
-
 ## 🚀 Como Executar
 
 ```bash
@@ -301,8 +301,6 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 spring.jpa.show-sql=true
 
-# Execute a aplicação
-./mvnw spring-boot:run
 ```
 
 ---
@@ -338,5 +336,3 @@ src/
 │   └── resources/
 │       └── application.properties
 ```
-
----
