@@ -307,32 +307,41 @@ spring.jpa.show-sql=true
 
 ## 📁 Estrutura do Projeto
 
-```
+```text
 src/
-├── main/
-│   ├── java/
-│   │   └── com/condominio/
-│   │       ├── controller/
-│   │       ├── core/
-│   │       │    └── /excpetion
-│   │       │         └──/acesso
-│   │       │             /apartamento
-│   │       │             /morador
-│   │       │             /taxa
-│   │       │             /veiculo
-│   │       │             /visitante
-│   │       │          /infra
-│   │       ├── dto/
-│   │       │    └── /acesso
-│   │       │        /apartamento
-│   │       │        /morador
-│   │       │         /taxaCond
-│   │       │        /veiculo
-│   │       │        /visitante
-│   │       ├── entity/
-│   │       ├── Enum/
-│   │       ├── repository/
-│   │       └── service/
-│   └── resources/
-│       └── application.properties
+└── main/
+    └── java/
+        └── com/
+            └── condominio/
+                ├── controller/
+                │
+                ├── core/
+                │   ├── exception/
+                │   │   ├── acesso/
+                │   │   ├── apartamento/
+                │   │   ├── morador/
+                │   │   ├── taxa/
+                │   │   ├── veiculo/
+                │   │   └── visitante/
+                │   │
+                │   └── infra/
+                │
+                ├── dto/
+                │   ├── acesso/
+                │   ├── apartamento/
+                │   ├── morador/
+                │   ├── taxaCond/
+                │   ├── veiculo/
+                │   └── visitante/
+                │
+                ├── entity/
+                │
+                ├── Enum/
+                │
+                ├── repository/
+                │
+                ├── service/
+                │
+                └── AdminCondApplication.java
 ```
+
